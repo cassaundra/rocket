@@ -44,12 +44,12 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 			return
 		}
 		if (openedOutputDevice) {
-			val outputDevice = configuration!!.outputDevice
+			val outputDevice = configuration.outputDevice
 			if (outputDevice != null && outputDevice.isOpen)
 				outputDevice.close()
 		}
 		if (openedInputDevice) {
-			val inputDevice = configuration!!.inputDevice
+			val inputDevice = configuration.inputDevice
 			if (inputDevice != null && inputDevice.isOpen)
 				inputDevice.close()
 		}
