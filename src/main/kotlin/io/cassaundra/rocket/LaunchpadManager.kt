@@ -5,6 +5,7 @@ import javax.sound.midi.MidiUnavailableException
 
 object LaunchpadManager {
     var launchpad: Launchpad = Launchpad(NullLaunchpadClient())
+        private set
 
     private val scanRateSeconds = 3
 
