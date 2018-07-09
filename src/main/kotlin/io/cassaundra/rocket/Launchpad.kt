@@ -121,7 +121,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
         }
     }
 
-    fun displayText(text: String, color: Color, onComplete: () -> Unit) {
+    fun displayText(text: String, color: Color, onComplete: Runnable) {
         client.displayText(text, color, onComplete)
     }
 
@@ -148,7 +148,7 @@ interface LaunchpadClient {
     fun setPadColor(pad: Pad, color: Color)
     fun setButtonColor(button: Button, color: Color)
     fun setAllPadColors(color: Color)
-    fun displayText(text: String, color: Color, onComplete: () -> Unit)
+    fun displayText(text: String, color: Color, onComplete: Runnable)
     fun close()
 }
 

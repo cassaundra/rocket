@@ -1,6 +1,6 @@
-package io.cassaundra.rocket
+package io.cassaundra.rocket.Midi
 
-import org.apache.commons.lang.ArrayUtils
+import io.cassaundra.rocket.*
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 import javax.sound.midi.*
@@ -15,7 +15,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	private var openedOutputDevice = false
 	private var openedInputDevice = false
 
-	private var onTextComplete: () -> Unit? = {}
+	private var onTextComplete: Runnable = Runnable {  }
 
 	init {
 		val outputDevice = configuration!!.outputDevice
@@ -88,7 +88,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		}
 	}
 
-	override fun displayText(text: String, color: Color, onComplete: () -> Unit) {
+	override fun displayText(text: String, color: Color, onComplete: Runnable) {
 		onTextComplete = onComplete
 		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), color.midiVelocity.toByte(), 0.toByte()) + text.toByteArray(StandardCharsets.US_ASCII)
 		bytes += 247.toByte()
@@ -129,8 +129,8 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 			is ShortMessage ->
 				handleShortMessage(message, timestamp)
 			is SysexMessage -> {
-				onTextComplete.invoke()
-				onTextComplete = {}
+				onTextComplete.run()
+				onTextComplete = Runnable {  }
 			}
 			else -> throw RuntimeException("Unknown event: $message")
 		}

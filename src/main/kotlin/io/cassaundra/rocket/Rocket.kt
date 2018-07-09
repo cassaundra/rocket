@@ -1,15 +1,17 @@
 package io.cassaundra.rocket
 
+import io.cassaundra.rocket.Midi.MidiDeviceConfiguration
+import io.cassaundra.rocket.Midi.MidiLaunchpad
 import org.slf4j.LoggerFactory
 import javax.sound.midi.MidiUnavailableException
 
-object LaunchpadManager {
+object Rocket {
     var launchpad: Launchpad = Launchpad(NullLaunchpadClient())
         private set
 
     private val scanRateSeconds = 3
 
-    private val logger = LoggerFactory.getLogger(LaunchpadManager::class.java)
+    private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
     init {
         setupLaunchpad()
