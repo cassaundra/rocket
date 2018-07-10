@@ -1,19 +1,20 @@
 package io.cassaundra.rocket
 
-import java.util.*
+class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
-class Launchpad(var client: LaunchpadClient, var listener: LaunchpadListener = object: LaunchpadListener {}) : LaunchpadListener by listener {
+	var listener: LaunchpadListener = object: LaunchpadListener {}
 
-	private var pads = Array(8) { Array(8) { Color.OFF } }
+	@PublishedApi
+	internal var padRows = Array(8) { Array(8) { Color.OFF } }
 	private var topButtons = Array(8) { Color.OFF }
 	private var rightButtons = Array(8) { Color.OFF }
 
 	init {
 		setLaunchpadClient(client)
 
-		Arrays.stream(pads).forEach { padArray -> Arrays.fill(padArray, Color.OFF) }
-		Arrays.fill(topButtons, Color.OFF)
-		Arrays.fill(rightButtons, Color.OFF)
+		padRows.forEach { it.fill(Color.OFF) }
+		topButtons.fill(Color.OFF)
+		rightButtons.fill(Color.OFF)
 	}
 
 	fun close() {
@@ -28,24 +29,33 @@ class Launchpad(var client: LaunchpadClient, var listener: LaunchpadListener = o
 	}
 
 	fun setPad(pad: Pad, color: Color) {
-		val oldColor = pads[pad.y][pad.x]
+		val oldColor = padRows[pad.y][pad.x]
 
 		if (oldColor === color) return
 
-		pads[pad.y][pad.x] = color
+		padRows[pad.y][pad.x] = color
 
 		client.setPadColor(pad, color)
 	}
 
+	inline fun setPads(getNewColor: (Pad) -> Color) {
+		for(y in 0..7) {
+			for(x in 0..7) {
+				val pad = Pad(x, y)
+				setPad(pad, getNewColor(pad))
+			}
+		}
+	}
+
 	fun setPads(color: Color, vararg pads: Pad) {
-		for (pad in pads) {
-			setPad(pad, color)
+		pads.forEach {
+			setPad(it, color)
 		}
 	}
 
 	fun setAllPads(color: Color) {
-		for (p in pads) {
-			Arrays.fill(p, color)
+		padRows.forEach {
+			it.fill(color)
 		}
 
 		client.setAllPadColors(color)
@@ -80,14 +90,13 @@ class Launchpad(var client: LaunchpadClient, var listener: LaunchpadListener = o
 	}
 
 	fun getPadColor(pad: Pad) =
-		pads[pad.y][pad.x]
+		padRows[pad.y][pad.x]
 
 	fun getButtonColor(button: Button): Color {
-		return if (button is Button.Top) {
+		return if (button is Button.Top)
 			topButtons[button.coord]
-		} else {
+		else
 			rightButtons[button.coord]
-		}
 	}
 
 	private fun clearLaunchpadClient() {
@@ -113,13 +122,29 @@ class Launchpad(var client: LaunchpadClient, var listener: LaunchpadListener = o
 
 		for (y in 0..7) {
 			for (x in 0..7) {
-				client.setPadColor(Pad(x, y), pads[y][x])
+				client.setPadColor(Pad(x, y), padRows[y][x])
 			}
 		}
 	}
 
 	fun displayText(text: String, color: Color, onComplete: Runnable) {
 		client.displayText(text, color, onComplete)
+	}
+
+	override fun onPadDown(pad: Pad) {
+		listener.onPadDown(pad)
+	}
+
+	override fun onPadUp(pad: Pad) {
+		listener.onPadUp(pad)
+	}
+
+	override fun onButtonDown(button: Button) {
+		listener.onButtonDown(button)
+	}
+
+	override fun onButtonUp(button: Button) {
+		listener.onButtonUp(button)
 	}
 }
 
