@@ -1,7 +1,7 @@
 package io.cassaundra.rocket
 
-import io.cassaundra.rocket.Midi.MidiDeviceConfiguration
-import io.cassaundra.rocket.Midi.MidiLaunchpad
+import io.cassaundra.rocket.midi.MidiDeviceConfiguration
+import io.cassaundra.rocket.midi.MidiLaunchpad
 import org.slf4j.LoggerFactory
 import javax.sound.midi.MidiUnavailableException
 
