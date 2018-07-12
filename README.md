@@ -2,9 +2,15 @@
 
 Rocket is a client for the Novation Launchpad MK2 written in Kotlin and Java.
 
+## Setup
+
+// TODO deploy Maven project...
+
+## Examples
+
 ```kotlin
 // Obtain the Launchpad MK2 instance
-val lp = LaunchpadManager.launchpad
+val lp = Rocket.launchpad
 
 // Listen for input events
 lp.listener = object : LaunchpadListener {
@@ -33,7 +39,7 @@ Similarly, in Java...
 
 ```java
 // Obtain the Launchpad MK2 instance
-final Launchpad lp = LaunchpadManager.INSTANCE.getLaunchpad();
+final Launchpad lp = Rocket.INSTANCE.getLaunchpad();
 
 // Listen for input events
 lp.setListener(new LaunchpadListener() {
@@ -57,3 +63,6 @@ lp.setListener(new LaunchpadListener() {
     }
 });
 ```
+
+## Known Issues
+* Displaying Launchpad text fails on macOS (external problem)
