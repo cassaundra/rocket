@@ -2,10 +2,9 @@ package io.cassaundra.rocket
 
 class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
-	var listener: LaunchpadListener = object: LaunchpadListener {}
+	private val listeners: MutableList<LaunchpadListener> = arrayListOf()
 
-	@PublishedApi
-	internal var padRows = Array(8) { Array(8) { Color.OFF } }
+	private var padRows = Array(8) { Array(8) { Color.OFF } }
 	private var topButtons = Array(8) { Color.OFF }
 	private var rightButtons = Array(8) { Color.OFF }
 
@@ -38,16 +37,11 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		client.setPadColor(pad, color)
 	}
 
-	inline fun setPads(getNewColor: (Pad) -> Color) {
-		for(y in 0..7) {
-			for(x in 0..7) {
-				val pad = Pad(x, y)
-				setPad(pad, getNewColor(pad))
-			}
-		}
+	fun setPads(color: Color, vararg pads: Pad) {
+		setPads(pads.toList(), color)
 	}
 
-	fun setPads(color: Color, vararg pads: Pad) {
+	fun setPads(pads: List<Pad>, color: Color) {
 		pads.forEach {
 			setPad(it, color)
 		}
@@ -131,20 +125,28 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		client.displayText(text, color, onComplete)
 	}
 
+	fun addListener(listener: LaunchpadListener) {
+		listeners.add(listener)
+	}
+
+	fun removeListener(listener: LaunchpadListener) {
+		listeners.remove(listener)
+	}
+
 	override fun onPadDown(pad: Pad) {
-		listener.onPadDown(pad)
+		listeners.forEach { it.onPadDown(pad) }
 	}
 
 	override fun onPadUp(pad: Pad) {
-		listener.onPadUp(pad)
+		listeners.forEach { it.onPadUp(pad) }
 	}
 
 	override fun onButtonDown(button: Button) {
-		listener.onButtonDown(button)
+		listeners.forEach { it.onButtonDown(button) }
 	}
 
 	override fun onButtonUp(button: Button) {
-		listener.onButtonUp(button)
+		listeners.forEach { it.onButtonUp(button) }
 	}
 }
 
