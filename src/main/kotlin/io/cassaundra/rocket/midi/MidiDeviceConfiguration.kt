@@ -1,4 +1,4 @@
-package io.cassaundra.rocket.Midi
+package io.cassaundra.rocket.midi
 
 import javax.sound.midi.MidiDevice
 import javax.sound.midi.MidiSystem

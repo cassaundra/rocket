@@ -1,4 +1,4 @@
-package io.cassaundra.rocket.Midi
+package io.cassaundra.rocket.midi
 
 import io.cassaundra.rocket.*
 import org.slf4j.LoggerFactory
@@ -90,7 +90,8 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	override fun displayText(text: String, color: Color, onComplete: Runnable) {
 		onTextComplete = onComplete
-		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), color.midiVelocity.toByte(), 0.toByte()) + text.toByteArray(StandardCharsets.US_ASCII)
+		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), color.midiVelocity.toByte(), 0.toByte())
+		bytes += text.toByteArray(StandardCharsets.US_ASCII)
 		bytes += 247.toByte()
 
 		sendSysExMessage(bytes)
@@ -127,7 +128,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 		override fun send(message: MidiMessage, timestamp: Long) = when (message) {
 			is ShortMessage ->
-				handleShortMessage(message, timestamp)
+				handleShortMessage(message)
 			is SysexMessage -> {
 				onTextComplete.run()
 				onTextComplete = Runnable {  }
@@ -135,19 +136,19 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 			else -> throw RuntimeException("Unknown event: $message")
 		}
 
-		protected fun handleShortMessage(message: ShortMessage, timestamp: Long) {
+		private fun handleShortMessage(message: ShortMessage) {
 			val status = message.status
 			val note = message.data1
 			val velocity = message.data2
 
 			when (status) {
-				ShortMessage.NOTE_ON -> handleNoteOnMessage(note, velocity, timestamp)
-				ShortMessage.CONTROL_CHANGE -> handleControlChangeMessage(note, velocity, timestamp)
+				ShortMessage.NOTE_ON -> handleNoteOnMessage(note, velocity)
+				ShortMessage.CONTROL_CHANGE -> handleControlChangeMessage(note, velocity)
 				else -> throw RuntimeException("Unknown event: $message")
 			}
 		}
 
-		protected fun handleNoteOnMessage(note: Int, velocity: Int, timestamp: Long) {
+		private fun handleNoteOnMessage(note: Int, velocity: Int) {
 			val pad: Pad? = getPad(note)
 			if (pad != null) {
 				if (velocity == 0)
@@ -163,7 +164,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 			}
 		}
 
-		protected fun handleControlChangeMessage(note: Int, velocity: Int, timestamp: Long) {
+		private fun handleControlChangeMessage(note: Int, velocity: Int) {
 			if (velocity == 0) {
 				launchpadListener.onButtonUp(getTopButton(note))
 			} else {
