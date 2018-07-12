@@ -4,7 +4,7 @@ class Pad(x: Int, y: Int) {
 	val x: Int = if(x in 0..7) x else throw IllegalArgumentException("x not in 0..7")
 	val y: Int = if(y in 0..7) y else throw IllegalArgumentException("y not in 0..7")
 
-	object Util {
+	companion object Util {
 		@JvmStatic fun getPadsInRect(p1: Pad, p2: Pad) : List<Pad> {
 			val x1: Int = Math.min(p1.x, p2.x)
 			val x2: Int = Math.max(p1.x, p2.x)
@@ -19,6 +19,17 @@ class Pad(x: Int, y: Int) {
 				}
 			}
 
+			return pads
+		}
+
+        @JvmStatic fun getAllPads() : List<Pad> {
+			val pads = mutableListOf<Pad>()
+
+			for(y in (0..7)) {
+				for(x in (0..7)) {
+					pads.add(Pad(x, y))
+				}
+			}
 			return pads
 		}
 	}
