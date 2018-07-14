@@ -1,6 +1,6 @@
-<img src="https://github.com/actuallycass/rocket/raw/master/Logo.png" width=128 height=128 >
+[![Kotlin](https://img.shields.io/badge/kotlin-1.2.51-blue.svg)](http://kotlinlang.org)
 
-Rocket is a Novation Launchpad MK2 client written in Kotlin and Java.
+<img src="Logo.png" width=192 height=192>
 
 ## Setup
 
