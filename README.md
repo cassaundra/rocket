@@ -13,7 +13,7 @@
 val lp = Rocket.launchpad
 
 // Listen for input events
-lp.listener = object : LaunchpadListener {
+lp.addListener(object : LaunchpadListener {
     override fun onPadDown(pad: Pad) {
         lp.setPad(pad, Color.WHITE)
     }
@@ -32,7 +32,7 @@ lp.listener = object : LaunchpadListener {
     override fun onButtonUp(button: Button) {
         lp.setButton(button, Color.OFF)
     }
-}
+})
 ```
 
 Similarly, in Java...
@@ -42,7 +42,7 @@ Similarly, in Java...
 final Launchpad lp = Rocket.INSTANCE.getLaunchpad();
 
 // Listen for input events
-lp.setListener(new LaunchpadListener() {
+lp.addListener(new LaunchpadListener() {
     public void onPadDown(@NotNull Pad pad) {
         lp.setPad(pad, Color.WHITE);
     }
