@@ -1,6 +1,6 @@
-# rocket
+<img src="https://github.com/actuallycass/rocket/raw/master/Logo.png" width=128 height=128 >
 
-Rocket is a client for the Novation Launchpad MK2 written in Kotlin and Java.
+Rocket is a Novation Launchpad MK2 client written in Kotlin and Java.
 
 ## Setup
 
