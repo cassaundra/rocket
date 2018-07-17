@@ -70,7 +70,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	override fun setButtonColor(button: Button, color: Color) {
 		try {
-			if (button is Button.Top) {
+			if (button.isTop) {
 				sendShortMessage(ShortMessage.CONTROL_CHANGE, color.channel, button.coord + 104, color.midiVelocity)
 			} else {
 				sendShortMessage(ShortMessage.NOTE_ON, color.channel, (7 - button.coord) * 10 + 19, color.midiVelocity)
@@ -149,52 +149,30 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		}
 
 		private fun handleNoteOnMessage(note: Int, velocity: Int) {
-			val pad: Pad? = getPad(note)
+			val pad: Pad? = Pad.fromMidi(note)
 			if (pad != null) {
 				if (velocity == 0)
 					launchpadListener.onPadUp(pad)
 				else
 					launchpadListener.onPadDown(pad)
 			} else {
-				val button = getRightButton(note)
+				val button = Button.fromMidiRight(note)!!
 				if (velocity == 0)
-					launchpadListener.onButtonUp(button!!)
+					launchpadListener.onButtonUp(button)
 				else
-					launchpadListener.onButtonDown(button!!)
+					launchpadListener.onButtonDown(button)
 			}
 		}
 
 		private fun handleControlChangeMessage(note: Int, velocity: Int) {
+			val button = Button.fromMidiTop(note)
 			if (velocity == 0) {
-				launchpadListener.onButtonUp(getTopButton(note))
+				launchpadListener.onButtonUp(button)
 			} else {
-				launchpadListener.onButtonDown(getTopButton(note))
+				launchpadListener.onButtonDown(button)
 			}
 		}
 
 		override fun close() {}
-
-		// util
-
-		private fun getPad(note: Int): Pad? {
-			var note = note
-			note -= 11
-			val x = note % 10
-			val y = (note - x) / 10
-			return if (x < 0 || x > 7 || y < 0 || y > 7) null else Pad(x, y)
-		}
-
-		private fun getRightButton(note: Int): Button? {
-			var note = note
-			note -= 19
-			note /= 10
-			return if (note < 0 || note > 7) null else Button.Right(7 - note)
-		}
-
-		private fun getTopButton(note: Int): Button {
-			var note = note
-			note -= 104
-			return Button.Top(note)
-		}
 	}
 }
