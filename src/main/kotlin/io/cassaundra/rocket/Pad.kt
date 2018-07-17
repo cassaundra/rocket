@@ -9,7 +9,7 @@ class Pad(x: Int, y: Int) {
 	val y: Int = if(y in 0..7) y else throw IllegalArgumentException("y not in 0..7")
 
 	companion object Util {
-		@JvmStatic fun getPadsInRect(p1: Pad, p2: Pad) : List<Pad> {
+		@JvmStatic fun rect(p1: Pad, p2: Pad) : List<Pad> {
 			val x1: Int = Math.min(p1.x, p2.x)
 			val x2: Int = Math.max(p1.x, p2.x)
 			val y1: Int = Math.min(p1.y, p2.y)
@@ -26,7 +26,7 @@ class Pad(x: Int, y: Int) {
 			return pads
 		}
 
-		@JvmStatic fun getPadsInLine(p1: Pad, p2: Pad) : List<Pad> {
+		@JvmStatic fun line(p1: Pad, p2: Pad) : List<Pad> {
 			val xDiff = p2.x - p1.x
 			val yDiff = p2.y - p1.y
 
@@ -46,7 +46,7 @@ class Pad(x: Int, y: Int) {
 			return pads
 		}
 
-        @JvmStatic fun getAllPads() : List<Pad> {
+        @JvmStatic fun all() : List<Pad> {
 			val pads = mutableListOf<Pad>()
 
 			for(y in (0..7)) {
