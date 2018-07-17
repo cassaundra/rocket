@@ -45,8 +45,6 @@ class Pad(x: Int, y: Int) {
 				pads.add(Pad(p2.x, y))
 			}
 
-			println(pads.size)
-
 			return pads
 		}
 
