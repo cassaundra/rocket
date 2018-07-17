@@ -67,7 +67,7 @@ lp.addListener(new LaunchpadListener() {
 ## TODO
 * Automatically try to reconnect to Launchpad after disconnect
 * Give more control of MIDI scanning to the user
-* Add more utility functions (outlines, line segments, etc.)
+* Add more utility functions (outlines, etc.)
 
 ## Known Issues
 * Displaying Launchpad text fails on macOS (external problem)
