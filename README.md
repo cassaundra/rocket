@@ -25,7 +25,7 @@ lp.addListener(object : LaunchpadListener {
     }
 
     override fun onButtonDown(button: Button) {
-        if(button is Button.Top)
+        if(button.isTop)
             lp.setButton(button, Color.RED)
         else
             lp.setButton(button, Color.BLUE)
@@ -54,7 +54,7 @@ lp.addListener(new LaunchpadListener() {
     }
 
     public void onButtonDown(@NotNull Button button) {
-        if(button instanceof Button.Top)
+        if(button.isTop())
             lp.setButton(button, Color.RED);
         else
             lp.setButton(button, Color.BLUE);

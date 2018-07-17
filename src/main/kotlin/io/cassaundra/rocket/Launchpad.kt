@@ -58,7 +58,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	fun setButton(button: Button, color: Color) {
 		val oldColor: Color
 
-		if (button is Button.Top) {
+		if (button.isTop) {
 			oldColor = topButtons[button.coord]
 			topButtons[button.coord] = color
 		} else {
@@ -73,13 +73,13 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 	fun setAllTopButtons(color: Color) {
 		for (i in 0..7) {
-			setButton(Button.Top(i), color)
+			setButton(Button(i, isTop = true), color)
 		}
 	}
 
 	fun setAllRightButtons(color: Color) {
 		for (i in 0..7) {
-			setButton(Button.Right(i), color)
+			setButton(Button(i, isTop = true), color)
 		}
 	}
 
@@ -87,7 +87,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		padRows[pad.y][pad.x]
 
 	fun getButtonColor(button: Button): Color {
-		return if (button is Button.Top)
+		return if (button.isTop)
 			topButtons[button.coord]
 		else
 			rightButtons[button.coord]
@@ -97,8 +97,8 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		client.setAllPadColors(Color.OFF)
 
 		for (i in 0..7) {
-			client.setButtonColor(Button.Top(i), Color.OFF)
-			client.setButtonColor(Button.Right(i), Color.OFF)
+			client.setButtonColor(Button(i, isTop = true), Color.OFF)
+			client.setButtonColor(Button(i, isTop = false), Color.OFF)
 		}
 	}
 
@@ -110,8 +110,8 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		clearLaunchpadClient()
 
 		for (i in 0..7) {
-			client.setButtonColor(Button.Top(i), topButtons[i])
-			client.setButtonColor(Button.Right(i), rightButtons[i])
+			client.setButtonColor(Button(i, isTop = true), topButtons[i])
+			client.setButtonColor(Button(i, isTop = false), rightButtons[i])
 		}
 
 		for (y in 0..7) {
