@@ -38,10 +38,10 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	}
 
 	fun setPads(color: Color, vararg pads: Pad) {
-		setPads(pads.toList(), color)
+		setPads(pads.toSet(), color)
 	}
 
-	fun setPads(pads: List<Pad>, color: Color) {
+	fun setPads(pads: Set<Pad>, color: Color) {
 		pads.forEach {
 			setPad(it, color)
 		}
