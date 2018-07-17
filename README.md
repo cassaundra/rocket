@@ -8,6 +8,8 @@
 
 ## Examples
 
+View the [complete example project](https://github.com/actuallycass/rocket-example).
+
 ```kotlin
 // Obtain the Launchpad MK2 instance
 val lp = Rocket.launchpad
@@ -67,7 +69,6 @@ lp.addListener(new LaunchpadListener() {
 ## TODO
 * Automatically try to reconnect to Launchpad after disconnect
 * Give more control of MIDI scanning to the user
-* Add more utility functions (outlines, etc.)
 
 ## Known Issues
 * Displaying Launchpad text fails on macOS (external problem)
