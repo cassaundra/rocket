@@ -4,7 +4,13 @@
 
 ## Setup
 
-// TODO deploy Maven project...
+```xml
+<dependency>
+  <groupId>io.cassaundra</groupId>
+  <artifactId>rocket</artifactId>
+  <version>1.0</version>
+</dependency>
+```
 
 ## Examples
 
