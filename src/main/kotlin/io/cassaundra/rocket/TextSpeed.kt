@@ -1,5 +1,17 @@
 package io.cassaundra.rocket
 
+/**
+ * Can be used in [Launchpad.displayText] to change the text scrolling speed dynamically.
+ *
+ * Example Kotlin usage:
+ * ```
+ * Rocket.launchpad.displayText(
+ *     "${TextSpeed.SPEED_7} Fast text and ${TextSpeed.SPEED_2} slow text",
+ *     Color.WHITE,
+ *     Runnable { println("Done") }
+ * )
+ * ```
+ */
 object TextSpeed {
 	val SPEED_1 = 1.toChar()
 	val SPEED_2 = 2.toChar()

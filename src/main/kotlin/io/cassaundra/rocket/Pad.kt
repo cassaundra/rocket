@@ -4,6 +4,14 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * Represents a pad on the Launchpad at the coordinates [x], [y]
+ *
+ * @property[x] The x-coordinate of the pad. Must be in the range 0..7.
+ * @property[y] The y-coordinate of the pad, Must be in the range 0..7.
+ *
+ * @throws[IllegalArgumentException] if either [x] or [y] is not in the range 0..7.
+ */
 class Pad(x: Int, y: Int) {
 	val x: Int = if(x in 0..7) x else throw IllegalArgumentException("x not in 0..7")
 	val y: Int = if(y in 0..7) y else throw IllegalArgumentException("y not in 0..7")
