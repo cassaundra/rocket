@@ -22,7 +22,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	}
 
 	internal fun close() {
-		clearLaunchpadClient()
+		client.clearLaunchpad()
 		client.close()
 	}
 
@@ -30,9 +30,11 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	 * Sets all pads and buttons to [Color.OFF].
 	 */
 	fun clearAll() {
-		setAllPads(Color.OFF)
-		setAllTopButtons(Color.OFF)
-		setAllRightButtons(Color.OFF)
+		padRows.forEach { it.fill(Color.OFF) }
+		topButtons.fill(Color.OFF)
+		rightButtons.fill(Color.OFF)
+
+		client.clearLaunchpad()
 	}
 
 	/**
@@ -125,15 +127,6 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 			rightButtons[button.coord]
 	}
 
-	private fun clearLaunchpadClient() {
-		client.setAllPadColors(Color.OFF)
-
-		for (i in 0..7) {
-			client.setButtonColor(Button(i, isTop = true), Color.OFF)
-			client.setButtonColor(Button(i, isTop = false), Color.OFF)
-		}
-	}
-
 	/**
 	 * Sets the LaunchpadClient and sends all pad/button colors.
 	 */
@@ -142,7 +135,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		client.setListener(this)
 
-		clearLaunchpadClient()
+		client.clearLaunchpad()
 
 		for (i in 0..7) {
 			client.setButtonColor(Button(i, isTop = true), topButtons[i])
@@ -199,6 +192,7 @@ interface LaunchpadClient {
 	fun setListener(listener: LaunchpadListener)
 	fun setPadColor(pad: Pad, color: Color)
 	fun setButtonColor(button: Button, color: Color)
+	fun clearLaunchpad()
 	fun setAllPadColors(color: Color)
 	fun displayText(text: String, color: Color, onComplete: Runnable)
 	fun close()

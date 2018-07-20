@@ -80,12 +80,21 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		}
 	}
 
+	override fun clearLaunchpad() {
+		clearAllLEDs()
+	}
+
 	override fun setAllPadColors(color: Color) {
 		for (y in 0..7) {
 			for (x in 0..7) {
 				setPadColor(Pad(x, y), color)
 			}
 		}
+	}
+
+	private fun clearAllLEDs() {
+		println("clearing all LEDs")
+		sendSysExMessage(byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 14.toByte(), 0.toByte(), 247.toByte()))
 	}
 
 	private fun sendLEDChange(note: Int, color: Color) {
