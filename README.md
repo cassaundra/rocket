@@ -76,6 +76,3 @@ lp.addListener(new LaunchpadListener() {
 * Automatically try to reconnect to Launchpad after disconnect
 * Give more control of MIDI scanning to the user
 * Rework the color system to be more advanced
-
-## Known Issues
-* Displaying Launchpad text fails on macOS (external problem)
