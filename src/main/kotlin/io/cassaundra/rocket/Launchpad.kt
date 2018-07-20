@@ -21,11 +21,14 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		rightButtons.fill(Color.OFF)
 	}
 
-	fun close() {
+	internal fun close() {
 		clearLaunchpadClient()
 		client.close()
 	}
 
+	/**
+	 * Sets all pads and buttons to [Color.OFF].
+	 */
 	fun clearAll() {
 		setAllPads(Color.OFF)
 		setAllTopButtons(Color.OFF)
@@ -131,6 +134,9 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		}
 	}
 
+	/**
+	 * Sets the LaunchpadClient and sends all pad/button colors.
+	 */
 	fun setLaunchpadClient(client: LaunchpadClient) {
 		this.client = client
 
