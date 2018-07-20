@@ -5,7 +5,15 @@ import io.cassaundra.rocket.midi.MidiLaunchpad
 import org.slf4j.LoggerFactory
 import javax.sound.midi.MidiUnavailableException
 
+/**
+ * Manages [Launchpad]s and MIDI scanning.
+ */
 object Rocket {
+	/**
+	 * The [Launchpad].
+	 *
+	 * If a MIDI Launchpad has not yet been detected (or if one was lost), this value is still safe to use.
+	 */
 	var launchpad: Launchpad = Launchpad(NullLaunchpadClient())
 		private set
 
