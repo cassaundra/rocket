@@ -61,7 +61,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	override fun setPadColor(pad: Pad, color: Color) {
 		try {
-			sendShortMessage(ShortMessage.NOTE_ON, color.channel, getNote(pad), color.midiVelocity)
+			sendLEDChange(getNote(pad), color)
 		} catch (e: InvalidMidiDataException) {
 			e.printStackTrace()
 		}
@@ -71,9 +71,9 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	override fun setButtonColor(button: Button, color: Color) {
 		try {
 			if (button.isTop) {
-				sendShortMessage(ShortMessage.CONTROL_CHANGE, color.channel, button.coord + 104, color.midiVelocity)
+				sendLEDChange(button.coord + 104, color)
 			} else {
-				sendShortMessage(ShortMessage.NOTE_ON, color.channel, (7 - button.coord) * 10 + 19, color.midiVelocity)
+				sendLEDChange((7 - button.coord) * 10 + 19, color)
 			}
 		} catch (e: InvalidMidiDataException) {
 			logger.error("Invalid MIDI data", e)
@@ -88,9 +88,13 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		}
 	}
 
+	private fun sendLEDChange(note: Int, color: Color) {
+		sendSysExMessage(byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 11.toByte(), note.toByte(), color.red.toByte(), color.green.toByte(), color.blue.toByte(), 247.toByte()))
+	}
+
 	override fun displayText(text: String, color: Color, onComplete: Runnable) {
 		onTextComplete = onComplete
-		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), color.midiVelocity.toByte(), 0.toByte())
+		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), color.red.toByte(), color.green.toByte(), color.blue.toByte(), 0.toByte())
 		bytes += text.toByteArray(StandardCharsets.US_ASCII)
 		bytes += 247.toByte()
 
