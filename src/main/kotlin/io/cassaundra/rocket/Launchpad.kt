@@ -1,11 +1,13 @@
 package io.cassaundra.rocket
 
+import com.sun.org.apache.xpath.internal.operations.Bool
+
 /**
  * Represents the MIDI Launchpad.
  *
  * If the MIDI device has not been found, or if it was disconnected, pad/button colors and listeners are retained.
  */
-class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
+class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener {
 
 	private val listeners: MutableList<LaunchpadListener> = arrayListOf()
 
@@ -14,16 +16,14 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	private var rightButtons = Array(8) { Color.OFF }
 
 	init {
-		setLaunchpadClient(client)
-
 		padRows.forEach { it.fill(Color.OFF) }
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 	}
 
 	internal fun close() {
-		client.clear()
-		client.close()
+		client!!.clear()
+		client!!.close()
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 
-		client.clear()
+		client!!.clear()
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		client.sendPadColor(pad, color)
+		client!!.sendPadColor(pad, color)
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 			it.fill(color)
 		}
 
-		client.sendAllPadColors(color)
+		client!!.sendAllPadColors(color)
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		if (oldColor === color) return
 
-		client.sendButtonColor(button, color)
+		client!!.sendButtonColor(button, color)
 	}
 
 	/**
@@ -130,8 +130,10 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	/**
 	 * Sets the LaunchpadClient and sends all pad/button colors.
 	 */
-	fun setLaunchpadClient(client: LaunchpadClient) {
+	fun setLaunchpadClient(client: LaunchpadClient?) {
 		this.client = client
+
+		if(client == null) return;
 
 		client.setListener(this)
 
@@ -150,10 +152,16 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	}
 
 	/**
+	 * Whether or not the [LaunchpadClient] associated with this [Launchpad] is not null.
+	 */
+	fun hasClient() : Boolean =
+			client != null
+
+	/**
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
 	fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
-		client.displayText(text, color, onComplete)
+		client!!.displayText(text, color, onComplete)
 	}
 
 	/**

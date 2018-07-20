@@ -3,6 +3,8 @@ package io.cassaundra.rocket
 import io.cassaundra.rocket.midi.MidiDeviceConfiguration
 import io.cassaundra.rocket.midi.MidiLaunchpad
 import org.slf4j.LoggerFactory
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.sound.midi.MidiUnavailableException
 
 /**
@@ -14,7 +16,7 @@ object Rocket {
 	 *
 	 * If a MIDI Launchpad has not yet been detected (or if one was lost), this value is still safe to use.
 	 */
-	var launchpad: Launchpad = Launchpad(NullLaunchpadClient())
+	var launchpad: Launchpad = Launchpad()
 		private set
 
 	private val scanRateSeconds = 3
@@ -31,8 +33,6 @@ object Rocket {
 			logger.warn("MIDI does not function properly on Mac OS X. [JDK-8139153]")
 		}
 
-		launchpad = Launchpad(NullLaunchpadClient())
-
 		scan() // TODO repeatedly scan
 //        val executor = Executors.newScheduledThreadPool(1)
 //        executor.scheduleAtFixedRate({ scan() }, 0, midiScanRateSeconds.toLong(), TimeUnit.SECONDS)
@@ -48,9 +48,9 @@ object Rocket {
 		val config = MidiDeviceConfiguration.autodetect()
 
 		if (config.inputDevice == null || config.outputDevice == null) {
-			launchpad.setLaunchpadClient(NullLaunchpadClient())
+			launchpad.setLaunchpadClient(null)
 		} else {
-			if (launchpad.client is NullLaunchpadClient) {
+			if (!launchpad.hasClient()) {
 				try {
 					launchpad.setLaunchpadClient(MidiLaunchpad(config))
 				} catch (exc: MidiUnavailableException) {
