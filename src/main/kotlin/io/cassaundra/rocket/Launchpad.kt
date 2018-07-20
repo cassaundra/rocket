@@ -101,7 +101,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	 */
 	fun setAllRightButtons(color: Color) {
 		for (i in 0..7) {
-			setButton(Button(i, isTop = true), color)
+			setButton(Button(i, isTop = false), color)
 		}
 	}
 
