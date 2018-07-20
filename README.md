@@ -8,7 +8,7 @@
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
