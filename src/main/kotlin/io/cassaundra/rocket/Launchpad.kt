@@ -153,7 +153,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	/**
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
-	fun displayText(text: String, color: Color, onComplete: Runnable) {
+	fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
 		client.displayText(text, color, onComplete)
 	}
 
