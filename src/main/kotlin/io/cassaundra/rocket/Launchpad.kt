@@ -22,7 +22,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	}
 
 	internal fun close() {
-		client.clearLaunchpad()
+		client.clear()
 		client.close()
 	}
 
@@ -34,7 +34,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 
-		client.clearLaunchpad()
+		client.clear()
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		client.setPadColor(pad, color)
+		client.sendPadColor(pad, color)
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 			it.fill(color)
 		}
 
-		client.setAllPadColors(color)
+		client.sendAllPadColors(color)
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		if (oldColor === color) return
 
-		client.setButtonColor(button, color)
+		client.sendButtonColor(button, color)
 	}
 
 	/**
@@ -135,16 +135,16 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		client.setListener(this)
 
-		client.clearLaunchpad()
+		client.clear()
 
 		for (i in 0..7) {
-			client.setButtonColor(Button(i, isTop = true), topButtons[i])
-			client.setButtonColor(Button(i, isTop = false), rightButtons[i])
+			client.sendButtonColor(Button(i, isTop = true), topButtons[i])
+			client.sendButtonColor(Button(i, isTop = false), rightButtons[i])
 		}
 
 		for (y in 0..7) {
 			for (x in 0..7) {
-				client.setPadColor(Pad(x, y), padRows[y][x])
+				client.sendPadColor(Pad(x, y), padRows[y][x])
 			}
 		}
 	}
@@ -190,10 +190,10 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 interface LaunchpadClient {
 	fun setListener(listener: LaunchpadListener)
-	fun setPadColor(pad: Pad, color: Color)
-	fun setButtonColor(button: Button, color: Color)
-	fun clearLaunchpad()
-	fun setAllPadColors(color: Color)
+	fun sendPadColor(pad: Pad, color: Color)
+	fun sendButtonColor(button: Button, color: Color)
+	fun clear()
+	fun sendAllPadColors(color: Color)
 	fun displayText(text: String, color: Color, onComplete: Runnable)
 	fun close()
 }

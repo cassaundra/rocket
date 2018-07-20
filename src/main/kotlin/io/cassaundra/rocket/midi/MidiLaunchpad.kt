@@ -59,7 +59,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		transmitter!!.receiver = MidiLaunchpadReceiver(listener)
 	}
 
-	override fun setPadColor(pad: Pad, color: Color) {
+	override fun sendPadColor(pad: Pad, color: Color) {
 		try {
 			sendLEDChange(getNote(pad), color)
 		} catch (e: InvalidMidiDataException) {
@@ -68,7 +68,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	}
 
-	override fun setButtonColor(button: Button, color: Color) {
+	override fun sendButtonColor(button: Button, color: Color) {
 		try {
 			if (button.isTop) {
 				sendLEDChange(button.coord + 104, color)
@@ -80,14 +80,14 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		}
 	}
 
-	override fun clearLaunchpad() {
+	override fun clear() {
 		clearAllLEDs()
 	}
 
-	override fun setAllPadColors(color: Color) {
+	override fun sendAllPadColors(color: Color) {
 		for (y in 0..7) {
 			for (x in 0..7) {
-				setPadColor(Pad(x, y), color)
+				sendPadColor(Pad(x, y), color)
 			}
 		}
 	}
