@@ -94,7 +94,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	override fun displayText(text: String, color: Color, onComplete: Runnable) {
 		onTextComplete = onComplete
-		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), color.red.toByte(), color.green.toByte(), color.blue.toByte(), 0.toByte())
+		var bytes = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 20.toByte(), 3.toByte(), 0.toByte())
 		bytes += text.toByteArray(StandardCharsets.US_ASCII)
 		bytes += 247.toByte()
 
