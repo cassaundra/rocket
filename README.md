@@ -8,7 +8,7 @@
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
@@ -75,4 +75,4 @@ lp.addListener(new LaunchpadListener() {
 ## TODO
 * Automatically try to reconnect to Launchpad after disconnect
 * Give more control of MIDI scanning to the user
-* Rework the color system to be more advanced
+* Text only displays in white (MIDI limitation)
