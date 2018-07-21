@@ -22,11 +22,11 @@ package io.cassaundra.rocket
  * ```
  */
 object TextSpeed {
-	const val SPEED_1 = 1.toChar()
-	const val SPEED_2 = 2.toChar()
-	const val SPEED_3 = 3.toChar()
-	const val SPEED_4 = 4.toChar()
-	const val SPEED_5 = 5.toChar()
-	const val SPEED_6 = 6.toChar()
-	const val SPEED_7 = 7.toChar()
+	const val SPEED_0 = 1.toChar()
+	const val SPEED_1 = 2.toChar()
+	const val SPEED_2 = 3.toChar()
+	const val SPEED_3 = 4.toChar()
+	const val SPEED_4 = 5.toChar()
+	const val SPEED_5 = 6.toChar()
+	const val SPEED_6 = 7.toChar()
 }
