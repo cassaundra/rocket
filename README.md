@@ -25,7 +25,9 @@
 ## Getting Started
 
 ```kotlin
+// Allow MIDI scanning to begin
 Rocket.connect()
+
 // Obtain the Launchpad MK2 instance
 val lp = Rocket.launchpad
 
@@ -55,8 +57,10 @@ lp.addListener(object : LaunchpadListener {
 Similarly, in Java...
 
 ```java
-// Obtain the Launchpad MK2 instance
+// Allow MIDI scanning to begin
 Rocket.INSTANCE.connect();
+
+// Obtain the Launchpad MK2 instance
 final Launchpad lp = Rocket.INSTANCE.getLaunchpad();
 
 // Listen for input events
