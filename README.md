@@ -175,3 +175,4 @@ Rocket.INSTANCE.getLaunchpad().displayText(
 
 ## TODO
 * Text only displays in white (MIDI Launchpad limitation)
+* Add contributing documentation
