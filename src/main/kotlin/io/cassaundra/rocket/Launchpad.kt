@@ -22,6 +22,9 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 	}
 
 	internal fun close() {
+		if(client == null)
+			return
+		
 		client!!.clear()
 		client!!.close()
 	}
@@ -34,7 +37,8 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 
-		client!!.clear()
+		if(client != null)
+			client!!.clear()
 	}
 
 	/**
@@ -47,7 +51,8 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 
 		padRows[pad.y][pad.x] = color
 
-		client!!.sendPadColor(pad, color)
+		if(client != null)
+			client!!.sendPadColor(pad, color)
 	}
 
 	/**
@@ -67,7 +72,8 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 			it.fill(color)
 		}
 
-		client!!.sendAllPadColors(color)
+		if(client != null)
+			client!!.sendAllPadColors(color)
 	}
 
 	/**
@@ -86,7 +92,8 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 
 		if (oldColor === color) return
 
-		client!!.sendButtonColor(button, color)
+		if(client != null)
+			client!!.sendButtonColor(button, color)
 	}
 
 	/**
@@ -133,7 +140,7 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 	fun setLaunchpadClient(client: LaunchpadClient?) {
 		this.client = client
 
-		if(client == null) return;
+		if(client == null) return
 
 		client.setListener(this)
 
@@ -161,7 +168,8 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
 	fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
-		client!!.displayText(text, color, onComplete)
+		if(client != null)
+			client!!.displayText(text, color, onComplete)
 	}
 
 	/**

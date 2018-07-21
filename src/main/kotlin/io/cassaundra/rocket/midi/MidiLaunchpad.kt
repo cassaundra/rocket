@@ -93,7 +93,6 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	}
 
 	private fun clearAllLEDs() {
-		println("clearing all LEDs")
 		sendSysExMessage(byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte(), 14.toByte(), 0.toByte(), 247.toByte()))
 	}
 
