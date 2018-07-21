@@ -2,21 +2,30 @@
 
 <img src="Logo.png" width=192 height=192>
 
+## Table of Contents
+- [Setup](#setup)
+- [Getting Started](#getting-started)
+- [Colors](#colors)
+- [Displaying Text](#displaying-text)
+  - [Basics](#basics)
+  - [Speed](#speed)
+  - [Completion](#completion)
+- [TODO](#todo)
+
 ## Setup
 
 ```xml
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
-## Examples
-
-View the [complete example project](https://github.com/actuallycass/rocket-example).
+## Getting Started
 
 ```kotlin
+Rocket.connect()
 // Obtain the Launchpad MK2 instance
 val lp = Rocket.launchpad
 
@@ -47,6 +56,7 @@ Similarly, in Java...
 
 ```java
 // Obtain the Launchpad MK2 instance
+Rocket.INSTANCE.connect();
 final Launchpad lp = Rocket.INSTANCE.getLaunchpad();
 
 // Listen for input events
@@ -72,7 +82,102 @@ lp.addListener(new LaunchpadListener() {
 });
 ```
 
+Now you're on your way to creating a full Launchpad app!
+
+## Colors
+
+You can use custom colors by specifiying RGB int values between 0 and 63 inclusive.
+
+```kotlin
+val color = Color(42, 0, 30)
+```
+
+In Java,
+
+```java
+Color color = new Color(42, 0, 30);
+```
+
+If you want to convert an HSV value to a Launchpad color, use `Color.fromHSV`, with each value a float in the range 0 to 1.
+
+```kotlin
+val color = Color.fromHSV(.5f, 1f, 1f)
+```
+
+In Java,
+
+```java
+Color color = Color.fromHSV(.5f, 1f, 1f);
+```
+
+## Displaying Text
+
+### Basics
+
+You can call the Launchpad's built-in MIDI command for displaying text with `Launchpad.displayText`. Due to a Launchpad MIDI issue, changing the color from white does not yet work.
+
+```kotlin
+Rocket.launchpad.displayText(
+    "Hello world!",
+    Color.WHITE
+)
+```
+
+In Java,
+
+```java
+Rocket.INSTANCE.displayText(
+    "Hello world!",
+    Color.WHITE
+);
+```
+
+### Speed
+
+You can control the text scrolling speed per-character with seven different available speeds in `TextSpeed`.
+
+```kotlin
+Rocket.launchpad.displayText(
+    "Hello! ${TextSpeed.SPEED_1}Let's take this slower.",
+    Color.WHITE
+)
+```
+
+In Java,
+
+```java
+Rocket.INSTANCE.displayText(
+    "Hello! " + TextSpeed.SPEED_1 + "Let's take this slower.",
+    Color.WHITE,
+);
+```
+
+### Completion
+
+If you need to know when text has finished scrolling, you can use the onComplete argument.
+
+```kotlin
+Rocket.launchpad.displayText(
+    "Hello world!",
+    Color.WHITE,
+    Runnable { println("Done!") }
+)
+
+```
+
+In Java,
+
+```java
+Rocket.INSTANCE.displayText(
+    "Hello world!",
+    Color.WHITE,
+    () -> System.out.println("Done!")
+);
+```
+
+## Utils
+
+`Pad.Util` provides several useful utility functions, like rectangles, line segments, and more.
+
 ## TODO
-* Automatically try to reconnect to Launchpad after disconnect
-* Give more control of MIDI scanning to the user
-* Text only displays in white (MIDI limitation)
+* Text only displays in white (MIDI Launchpad limitation)
