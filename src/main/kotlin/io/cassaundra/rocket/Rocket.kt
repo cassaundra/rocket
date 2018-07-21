@@ -33,9 +33,8 @@ object Rocket {
 			logger.warn("MIDI does not function properly on Mac OS X. [JDK-8139153]")
 		}
 
-		scan() // TODO repeatedly scan
-//        val executor = Executors.newScheduledThreadPool(1)
-//        executor.scheduleAtFixedRate({ scan() }, 0, midiScanRateSeconds.toLong(), TimeUnit.SECONDS)
+        val executor = Executors.newScheduledThreadPool(1)
+        executor.scheduleAtFixedRate({ scan() }, 0, scanRateSeconds.toLong(), TimeUnit.SECONDS)
 	}
 
 	private fun setupShutdownHook() {
