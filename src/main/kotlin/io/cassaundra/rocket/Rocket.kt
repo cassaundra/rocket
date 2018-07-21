@@ -25,7 +25,7 @@ object Rocket {
 		setupShutdownHook()
 	}
 
-	fun connect(scanRateSeconds: Long = 3) {
+	@JvmOverloads fun connect(scanRateSeconds: Long = 3) {
 		val executor = Executors.newScheduledThreadPool(1)
 		executor.scheduleAtFixedRate({ scan() }, 0, scanRateSeconds, TimeUnit.SECONDS)
 	}

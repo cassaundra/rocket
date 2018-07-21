@@ -167,7 +167,7 @@ class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener
 	/**
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
-	fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
+	@JvmOverloads fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
 		if(client != null)
 			client!!.displayText(text, color, onComplete)
 	}
