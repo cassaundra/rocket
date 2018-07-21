@@ -18,7 +18,7 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 		 *
 		 * Each HSV value should be in the 0..1 float range.
 		 */
-		fun fromHSV(h: Float, s: Float, v: Float): Color {
+		@JvmStatic fun fromHSV(h: Float, s: Float, v: Float): Color {
 			var r = 0f
 			var g = 0f
 			var b = 0f
