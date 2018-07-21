@@ -1,11 +1,13 @@
 package io.cassaundra.rocket
 
+import com.sun.org.apache.xpath.internal.operations.Bool
+
 /**
  * Represents the MIDI Launchpad.
  *
  * If the MIDI device has not been found, or if it was disconnected, pad/button colors and listeners are retained.
  */
-class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
+class Launchpad(private var client: LaunchpadClient? = null) : LaunchpadListener {
 
 	private val listeners: MutableList<LaunchpadListener> = arrayListOf()
 
@@ -14,22 +16,29 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	private var rightButtons = Array(8) { Color.OFF }
 
 	init {
-		setLaunchpadClient(client)
-
 		padRows.forEach { it.fill(Color.OFF) }
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 	}
 
-	fun close() {
-		clearLaunchpadClient()
-		client.close()
+	internal fun close() {
+		if(client == null)
+			return
+		
+		client!!.clear()
+		client!!.close()
 	}
 
+	/**
+	 * Sets all pads and buttons to [Color.OFF].
+	 */
 	fun clearAll() {
-		setAllPads(Color.OFF)
-		setAllTopButtons(Color.OFF)
-		setAllRightButtons(Color.OFF)
+		padRows.forEach { it.fill(Color.OFF) }
+		topButtons.fill(Color.OFF)
+		rightButtons.fill(Color.OFF)
+
+		if(client != null)
+			client!!.clear()
 	}
 
 	/**
@@ -42,7 +51,8 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		client.setPadColor(pad, color)
+		if(client != null)
+			client!!.sendPadColor(pad, color)
 	}
 
 	/**
@@ -62,7 +72,8 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 			it.fill(color)
 		}
 
-		client.setAllPadColors(color)
+		if(client != null)
+			client!!.sendAllPadColors(color)
 	}
 
 	/**
@@ -81,7 +92,8 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 		if (oldColor === color) return
 
-		client.setButtonColor(button, color)
+		if(client != null)
+			client!!.sendButtonColor(button, color)
 	}
 
 	/**
@@ -98,7 +110,7 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 	 */
 	fun setAllRightButtons(color: Color) {
 		for (i in 0..7) {
-			setButton(Button(i, isTop = true), color)
+			setButton(Button(i, isTop = false), color)
 		}
 	}
 
@@ -122,39 +134,42 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 			rightButtons[button.coord]
 	}
 
-	private fun clearLaunchpadClient() {
-		client.setAllPadColors(Color.OFF)
-
-		for (i in 0..7) {
-			client.setButtonColor(Button(i, isTop = true), Color.OFF)
-			client.setButtonColor(Button(i, isTop = false), Color.OFF)
-		}
-	}
-
-	fun setLaunchpadClient(client: LaunchpadClient) {
+	/**
+	 * Sets the LaunchpadClient and sends all pad/button colors.
+	 */
+	fun setLaunchpadClient(client: LaunchpadClient?) {
 		this.client = client
+
+		if(client == null) return
 
 		client.setListener(this)
 
-		clearLaunchpadClient()
+		client.clear()
 
 		for (i in 0..7) {
-			client.setButtonColor(Button(i, isTop = true), topButtons[i])
-			client.setButtonColor(Button(i, isTop = false), rightButtons[i])
+			client.sendButtonColor(Button(i, isTop = true), topButtons[i])
+			client.sendButtonColor(Button(i, isTop = false), rightButtons[i])
 		}
 
 		for (y in 0..7) {
 			for (x in 0..7) {
-				client.setPadColor(Pad(x, y), padRows[y][x])
+				client.sendPadColor(Pad(x, y), padRows[y][x])
 			}
 		}
 	}
 
 	/**
+	 * Whether or not the [LaunchpadClient] associated with this [Launchpad] is not null.
+	 */
+	fun hasClient() : Boolean =
+			client != null
+
+	/**
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
-	fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
-		client.displayText(text, color, onComplete)
+	@JvmOverloads fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
+		if(client != null)
+			client!!.displayText(text, color, onComplete)
 	}
 
 	/**
@@ -191,9 +206,10 @@ class Launchpad(var client: LaunchpadClient) : LaunchpadListener {
 
 interface LaunchpadClient {
 	fun setListener(listener: LaunchpadListener)
-	fun setPadColor(pad: Pad, color: Color)
-	fun setButtonColor(button: Button, color: Color)
-	fun setAllPadColors(color: Color)
+	fun sendPadColor(pad: Pad, color: Color)
+	fun sendButtonColor(button: Button, color: Color)
+	fun clear()
+	fun sendAllPadColors(color: Color)
 	fun displayText(text: String, color: Color, onComplete: Runnable)
 	fun close()
 }
