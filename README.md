@@ -101,13 +101,7 @@ Color color = new Color(42, 0, 30);
 If you want to convert an HSV value to a Launchpad color, use `Color.fromHSV`, with each value a float in the range 0 to 1.
 
 ```kotlin
-val color = Color.fromHSV(.5f, 1f, 1f)
-```
-
-In Java,
-
-```java
-Color color = Color.fromHSV(.5f, 1f, 1f);
+Color.fromHSV(.5f, 1f, 1f)
 ```
 
 ## Displaying Text
@@ -126,7 +120,7 @@ Rocket.launchpad.displayText(
 In Java,
 
 ```java
-Rocket.INSTANCE.displayText(
+Rocket.INSTANCE.getLaunchpad().displayText(
     "Hello world!",
     Color.WHITE
 );
@@ -146,7 +140,7 @@ Rocket.launchpad.displayText(
 In Java,
 
 ```java
-Rocket.INSTANCE.displayText(
+Rocket.INSTANCE.getLaunchpad().displayText(
     "Hello! " + TextSpeed.SPEED_1 + "Let's take this slower.",
     Color.WHITE,
 );
@@ -168,7 +162,7 @@ Rocket.launchpad.displayText(
 In Java,
 
 ```java
-Rocket.INSTANCE.displayText(
+Rocket.INSTANCE.getLaunchpad().displayText(
     "Hello world!",
     Color.WHITE,
     () -> System.out.println("Done!")
