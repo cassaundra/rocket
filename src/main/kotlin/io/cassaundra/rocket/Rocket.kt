@@ -19,22 +19,15 @@ object Rocket {
 	var launchpad: Launchpad = Launchpad()
 		private set
 
-	private val scanRateSeconds = 3
-
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
 	init {
-		setupLaunchpad()
 		setupShutdownHook()
 	}
 
-	private fun setupLaunchpad() {
-		if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-			logger.warn("MIDI does not function properly on Mac OS X. [JDK-8139153]")
-		}
-
-        val executor = Executors.newScheduledThreadPool(1)
-        executor.scheduleAtFixedRate({ scan() }, 0, scanRateSeconds.toLong(), TimeUnit.SECONDS)
+	fun connect(scanRateSeconds: Long = 3) {
+		val executor = Executors.newScheduledThreadPool(1)
+		executor.scheduleAtFixedRate({ scan() }, 0, scanRateSeconds, TimeUnit.SECONDS)
 	}
 
 	private fun setupShutdownHook() {
