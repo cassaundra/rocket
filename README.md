@@ -41,7 +41,7 @@ import io.cassaundra.rocket.Rocket.setPad
 // ...
 
 // Allow MIDI scanning to begin
-Rocket.startScanning()
+Rocket.beginScan()
 
 // Listen for input events
 Rocket.addListener(object : LaunchpadListener {
@@ -75,7 +75,7 @@ import static io.cassaundra.rocket.Rocket.setPad;
 // ...
 
 // Allow MIDI scanning to begin
-Rocket.startScanning();
+Rocket.beginScan();
 
 // Listen for input events
 Rocket.addListener(new LaunchpadListener() {
