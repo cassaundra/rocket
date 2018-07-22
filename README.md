@@ -20,7 +20,7 @@ Add this to your pom.xml:
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.0.2</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -28,7 +28,7 @@ Alternatively, with Gradle:
 
 ```
 dependencies {
-  compile 'io.cassaundra:rocket:1.0.2'
+  compile 'io.cassaundra:rocket:1.1.0'
 }
 ```
 
