@@ -35,31 +35,33 @@ dependencies {
 ## Getting Started
 
 ```kotlin
+import io.cassaundra.rocket.Rocket.setButton
+import io.cassaundra.rocket.Rocket.setPad
+
+// ...
+
 // Allow MIDI scanning to begin
 Rocket.connect()
 
-// Obtain the Launchpad MK2 instance
-val lp = Rocket.launchpad
-
 // Listen for input events
-lp.addListener(object : LaunchpadListener {
+Rocket.addListener(object : LaunchpadListener {
     override fun onPadDown(pad: Pad) {
-        lp.setPad(pad, Color.WHITE)
+        setPad(pad, Color.WHITE)
     }
 
     override fun onPadUp(pad: Pad) {
-        lp.setPad(pad, Color.OFF)
+        setPad(pad, Color.OFF)
     }
 
     override fun onButtonDown(button: Button) {
         if(button.isTop)
-            lp.setButton(button, Color.RED)
+            setButton(button, Color.RED)
         else
-            lp.setButton(button, Color.BLUE)
+            setButton(button, Color.BLUE)
     }
 
     override fun onButtonUp(button: Button) {
-        lp.setButton(button, Color.OFF)
+        setButton(button, Color.OFF)
     }
 })
 ```
@@ -67,31 +69,33 @@ lp.addListener(object : LaunchpadListener {
 Similarly, in Java...
 
 ```java
-// Allow MIDI scanning to begin
-Rocket.INSTANCE.connect();
+import static io.cassaundra.rocket.Rocket.setButton;
+import static io.cassaundra.rocket.Rocket.setPad;
 
-// Obtain the Launchpad MK2 instance
-final Launchpad lp = Rocket.INSTANCE.getLaunchpad();
+// ...
+
+// Allow MIDI scanning to begin
+Rocket.connect();
 
 // Listen for input events
-lp.addListener(new LaunchpadListener() {
+Rocket.addListener(new LaunchpadListener() {
     public void onPadDown(@NotNull Pad pad) {
-        lp.setPad(pad, Color.WHITE);
+        setPad(pad, Color.WHITE);
     }
 
     public void onPadUp(@NotNull Pad pad) {
-        lp.setPad(pad, Color.OFF);
+        setPad(pad, Color.OFF);
     }
 
     public void onButtonDown(@NotNull Button button) {
         if(button.isTop())
-            lp.setButton(button, Color.RED);
+            setButton(button, Color.RED);
         else
-            lp.setButton(button, Color.BLUE);
+            setButton(button, Color.BLUE);
     }
 
     public void onButtonUp(@NotNull Button button) {
-        lp.setButton(button, Color.OFF);
+        setButton(button, Color.OFF);
     }
 });
 ```
@@ -125,7 +129,7 @@ Color.fromHSV(.5f, 1f, 1f)
 You can call the Launchpad's built-in MIDI command for displaying text with `Launchpad.displayText`. Due to a Launchpad MIDI issue, changing the color from white does not yet work.
 
 ```kotlin
-Rocket.launchpad.displayText(
+Rocket.displayText(
     "Hello world!",
     Color.WHITE
 )
@@ -134,7 +138,7 @@ Rocket.launchpad.displayText(
 In Java,
 
 ```java
-Rocket.INSTANCE.getLaunchpad().displayText(
+Rocket.displayText(
     "Hello world!",
     Color.WHITE
 );
@@ -145,7 +149,7 @@ Rocket.INSTANCE.getLaunchpad().displayText(
 You can control the text scrolling speed per-character with seven different available speeds in `TextSpeed`.
 
 ```kotlin
-Rocket.launchpad.displayText(
+Rocket.displayText(
     "Hello! ${TextSpeed.SPEED_1}Let's take this slower.",
     Color.WHITE
 )
@@ -154,7 +158,7 @@ Rocket.launchpad.displayText(
 In Java,
 
 ```java
-Rocket.INSTANCE.getLaunchpad().displayText(
+Rocket.displayText(
     "Hello! " + TextSpeed.SPEED_1 + "Let's take this slower.",
     Color.WHITE,
 );
@@ -165,7 +169,7 @@ Rocket.INSTANCE.getLaunchpad().displayText(
 If you need to know when text has finished scrolling, you can use the onComplete argument.
 
 ```kotlin
-Rocket.launchpad.displayText(
+Rocket.displayText(
     "Hello world!",
     Color.WHITE,
     Runnable { println("Done!") }
@@ -176,7 +180,7 @@ Rocket.launchpad.displayText(
 In Java,
 
 ```java
-Rocket.INSTANCE.getLaunchpad().displayText(
+Rocket.displayText(
     "Hello world!",
     Color.WHITE,
     () -> System.out.println("Done!")
