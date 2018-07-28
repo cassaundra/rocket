@@ -41,6 +41,8 @@ object Rocket : LaunchpadListener {
 	 * Starts MIDI scanning. Will rescan every [scanRateSeconds] seconds (default is 3).
 	 */
 	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3) {
+		if(hasBeganScanning) return
+		
 		hasBeganScanning = true
 
 		val executor = Executors.newScheduledThreadPool(1)
