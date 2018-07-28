@@ -177,6 +177,15 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
+	 * Sets the color of [buttons] to [color]. Thread-safe.
+	 */
+	@Synchronized @JvmStatic fun setButtons(buttons: Set<Button>, color: Color) {
+		buttons.forEach {
+			setButton(it, color)
+		}
+	}
+
+	/**
 	 * Sets the color of all top buttons to [color]. Thread-safe.
 	 */
 	@JvmStatic fun setAllTopButtons(color: Color) {
