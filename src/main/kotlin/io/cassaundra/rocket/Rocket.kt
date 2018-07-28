@@ -1,5 +1,6 @@
 package io.cassaundra.rocket
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import io.cassaundra.rocket.midi.MidiDeviceConfiguration
 import io.cassaundra.rocket.midi.MidiLaunchpad
 import org.slf4j.LoggerFactory
@@ -23,6 +24,8 @@ object Rocket : LaunchpadListener {
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
+	private var isClosed = false
+
 	init {
 		setupShutdownHook()
 
@@ -31,21 +34,13 @@ object Rocket : LaunchpadListener {
 		rightButtons.fill(Color.OFF)
 	}
 
-	/**
-	 * Starts MIDI scanning. Will rescan every [scanRateSeconds] seconds (default is 3).
-	 */
-	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3) {
-		val executor = Executors.newScheduledThreadPool(1)
-		executor.scheduleAtFixedRate({ scan() }, 0, scanRateSeconds, TimeUnit.SECONDS)
-	}
-
 	private fun scan() {
 		val config = MidiDeviceConfiguration.autodetect()
 
 		if (config.inputDevice == null || config.outputDevice == null) {
 			setLaunchpadClient(null)
 		} else {
-			if (!hasClient()) {
+			if (client == null) {
 				try {
 					setLaunchpadClient(MidiLaunchpad(config))
 				} catch (exc: MidiUnavailableException) {
@@ -53,6 +48,16 @@ object Rocket : LaunchpadListener {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Whether or not a MIDI Launchpad is connected.
+	 */
+	@JvmStatic fun clientIsAvailable() : Boolean {
+		if(isClosed) return false
+
+		scan()
+		return client != null
 	}
 
 	@JvmStatic fun setLaunchpadClient(client: LaunchpadClient?) {
@@ -84,11 +89,11 @@ object Rocket : LaunchpadListener {
 	}
 
 	private fun close() {
-		if(client == null)
-			return
-		
-		client!!.clear()
-		client!!.close()
+		if(clientIsAvailable()) {
+			client!!.clear()
+			client!!.close()
+		}
+		isClosed = true
 	}
 
 	/**
@@ -99,7 +104,7 @@ object Rocket : LaunchpadListener {
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 
-		if(client != null)
+		if(clientIsAvailable())
 			client!!.clear()
 	}
 
@@ -113,7 +118,7 @@ object Rocket : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		if(client != null)
+		if(clientIsAvailable())
 			client!!.sendPadColor(pad, color)
 	}
 
@@ -134,7 +139,7 @@ object Rocket : LaunchpadListener {
 			it.fill(color)
 		}
 
-		if(client != null)
+		if(clientIsAvailable())
 			client!!.sendAllPadColors(color)
 	}
 
@@ -154,7 +159,7 @@ object Rocket : LaunchpadListener {
 
 		if (oldColor === color) return
 
-		if(client != null)
+		if(clientIsAvailable())
 			client!!.sendButtonColor(button, color)
 	}
 
@@ -197,16 +202,10 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Whether or not the [LaunchpadClient] associated with this [Launchpad] is not null.
-	 */
-	@JvmStatic fun hasClient() : Boolean =
-			client != null
-
-	/**
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
 	@JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
-		if(client != null)
+		if(clientIsAvailable())
 			client!!.displayText(text, color, onComplete)
 	}
 
