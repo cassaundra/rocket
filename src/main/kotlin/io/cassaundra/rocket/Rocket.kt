@@ -24,8 +24,6 @@ object Rocket : LaunchpadListener {
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
-	private var lastScanTimestamp : Long = 0
-
 	private var hasBeganScanning = false
 	private var isClosed = false
 
