@@ -11,5 +11,24 @@ package io.cassaundra.rocket
 class Button(coord: Int, val isTop: Boolean) {
 	val coord: Int = if (coord in 0..7) coord else throw IllegalArgumentException("coord not in 0..7")
 
-	companion object Util
+	companion object Util {
+		/**
+		 * Gets all buttons on the top.
+		 */
+		@JvmStatic fun allTop() = (0..7).map {
+			Button(it, true)
+		}.toSet()
+
+		/**
+		 * Gets all buttons on the right.
+		 */
+		@JvmStatic fun allRight() = (0..7).map {
+			Button(it, true)
+		}.toSet()
+
+		/**
+		 * Gets all buttons on the top and the right.
+		 */
+		@JvmStatic fun all() = allTop() + allRight()
+	}
 }
