@@ -24,6 +24,9 @@ object Rocket : LaunchpadListener {
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
+	private var lastScanTimestamp : Long = 0
+
+	private var hasBeganScanning = false
 	private var isClosed = false
 
 	init {
@@ -32,6 +35,16 @@ object Rocket : LaunchpadListener {
 		padRows.forEach { it.fill(Color.OFF) }
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
+	}
+
+	/**
+	 * Starts MIDI scanning. Will rescan every [scanRateSeconds] seconds (default is 3).
+	 */
+	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3) {
+		hasBeganScanning = true
+
+		val executor = Executors.newScheduledThreadPool(1)
+		executor.scheduleAtFixedRate(::scan, 0, scanRateSeconds, TimeUnit.SECONDS)
 	}
 
 	private fun scan() {
@@ -104,7 +117,7 @@ object Rocket : LaunchpadListener {
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 
-		if(clientIsAvailable())
+		if(client != null)
 			client!!.clear()
 	}
 
@@ -118,7 +131,7 @@ object Rocket : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		if(clientIsAvailable())
+		if(client != null)
 			client!!.sendPadColor(pad, color)
 	}
 
@@ -139,7 +152,7 @@ object Rocket : LaunchpadListener {
 			it.fill(color)
 		}
 
-		if(clientIsAvailable())
+		if(client != null)
 			client!!.sendAllPadColors(color)
 	}
 
@@ -159,7 +172,7 @@ object Rocket : LaunchpadListener {
 
 		if (oldColor === color) return
 
-		if(clientIsAvailable())
+		if(client != null)
 			client!!.sendButtonColor(button, color)
 	}
 
@@ -205,7 +218,7 @@ object Rocket : LaunchpadListener {
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
 	 */
 	@JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
-		if(clientIsAvailable())
+		if(client != null)
 			client!!.displayText(text, color, onComplete)
 	}
 

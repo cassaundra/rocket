@@ -40,6 +40,9 @@ import io.cassaundra.rocket.Rocket.setPad
 
 // ...
 
+// Allow MIDI scanning to begin
+Rocket.beginScan()
+
 // Listen for input events
 Rocket.addListener(object : LaunchpadListener {
     override fun onPadDown(pad: Pad) {
@@ -70,6 +73,9 @@ import static io.cassaundra.rocket.Rocket.setButton;
 import static io.cassaundra.rocket.Rocket.setPad;
 
 // ...
+
+// Allow MIDI scanning to begin
+Rocket.beginScan();
 
 // Listen for input events
 Rocket.addListener(new LaunchpadListener() {
