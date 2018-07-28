@@ -25,11 +25,9 @@ class Pad(x: Int, y: Int) {
 
 			val pads: MutableSet<Pad> = mutableSetOf()
 
-			for(x in x1..x2) {
-				for(y in y1..y2) {
+			for(x in x1..x2)
+				for(y in y1..y2)
 					pads.add(Pad(x, y))
-				}
-			}
 
 			return pads
 		}
@@ -40,6 +38,7 @@ class Pad(x: Int, y: Int) {
 			// add horizontal
 			val minX = min(p1.x, p2.x)
 			val maxX = max(p1.x, p2.x)
+
 			for(x in minX..maxX) {
 				pads.add(Pad(x, p1.y))
 				pads.add(Pad(x, p2.y))
@@ -48,6 +47,7 @@ class Pad(x: Int, y: Int) {
 			// add vertical
 			val minY = min(p1.y, p2.y)
 			val maxY = max(p1.y, p2.y)
+
 			for(y in minY..maxY) {
 				pads.add(Pad(p1.x, y))
 				pads.add(Pad(p2.x, y))
@@ -76,14 +76,19 @@ class Pad(x: Int, y: Int) {
 			return pads
 		}
 
+		@JvmStatic fun row(index: Int) =
+				all().filter { it.y == index }.toSet()
+
+		@JvmStatic fun column(index: Int) =
+				all().filter { it.x == index }.toSet()
+
         @JvmStatic fun all() : Set<Pad> {
 			val pads = mutableSetOf<Pad>()
 
-			for(y in (0..7)) {
-				for(x in (0..7)) {
+			for(y in 0..7)
+				for(x in 0..7)
 					pads.add(Pad(x, y))
-				}
-			}
+
 			return pads
 		}
 	}
