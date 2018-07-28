@@ -89,13 +89,13 @@ class Pad(x: Int, y: Int) {
 		 * Gets all pads in row [index].
 		 */
 		@JvmStatic fun row(index: Int) =
-				all().filter { it.y == index }.toSet()
+				all.filter { it.y == index }.toSet()
 
 		/**
 		 * Gets all pads in column [index].
 		 */
 		@JvmStatic fun column(index: Int) =
-				all().filter { it.x == index }.toSet()
+				all.filter { it.x == index }.toSet()
 
 		/**
 		 * Gets all pads on Launchpad. Does not include buttons, of course!
@@ -104,15 +104,11 @@ class Pad(x: Int, y: Int) {
 		 * @see Button.allTop
 		 * @see Button.allRight
 		 */
-        @JvmStatic fun all() : Set<Pad> {
-			val pads = mutableSetOf<Pad>()
-
-			for(y in 0..7)
-				for(x in 0..7)
-					pads.add(Pad(x, y))
-
-			return pads
-		}
+		@JvmStatic val all = (0..7).flatMap { y ->
+			(0..7).map { x->
+				Pad(x, y)
+			}
+		}.toSet()
 	}
 
 	override fun equals(other: Any?): Boolean {
