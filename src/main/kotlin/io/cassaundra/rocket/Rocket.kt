@@ -131,8 +131,6 @@ object Rocket : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		println(color.red)
-
 		if(client != null)
 			client!!.sendPadColor(pad, color)
 	}
