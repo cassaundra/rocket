@@ -110,9 +110,9 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Sets all pads and buttons to [Color.OFF].
+	 * Sets all pads and buttons to [Color.OFF]. Thread-safe.
 	 */
-	@JvmStatic fun clearAll() {
+	@Synchronized @JvmStatic fun clearAll() {
 		padRows.forEach { it.fill(Color.OFF) }
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
@@ -122,21 +122,22 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Sets the color of [pad] to [color].
+	 * Sets the color of [pad] to [color]. Thread-safe.
 	 */
-	@JvmStatic fun setPad(pad: Pad, color: Color) {
+	@Synchronized @JvmStatic fun setPad(pad: Pad, color: Color) {
 		val oldColor = padRows[pad.y][pad.x]
 
 		if (oldColor === color) return
 
 		padRows[pad.y][pad.x] = color
 
+
 		if(client != null)
 			client!!.sendPadColor(pad, color)
 	}
 
 	/**
-	 * Sets the color of [pads] to [color].
+	 * Sets the color of [pads] to [color]. Thread-safe.
 	 */
 	@JvmStatic fun setPads(pads: Set<Pad>, color: Color) {
 		pads.forEach {
@@ -145,9 +146,9 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Sets all pad colors (not buttons) to [color].
+	 * Sets all pad colors (not buttons) to [color]. Thread-safe.
 	 */
-	@JvmStatic fun setAllPads(color: Color) {
+	@Synchronized @JvmStatic fun setAllPads(color: Color) {
 		padRows.forEach {
 			it.fill(color)
 		}
@@ -157,9 +158,9 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Sets a specific button's color to [color].
+	 * Sets a specific button's color to [color]. Thread-safe.
 	 */
-	@JvmStatic fun setButton(button: Button, color: Color) {
+	@Synchronized @JvmStatic fun setButton(button: Button, color: Color) {
 		val oldColor: Color
 
 		if (button.isTop) {
@@ -177,7 +178,7 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Sets the color of all top buttons to [color].
+	 * Sets the color of all top buttons to [color]. Thread-safe.
 	 */
 	@JvmStatic fun setAllTopButtons(color: Color) {
 		for (i in 0..7) {
@@ -186,7 +187,7 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Sets the color of all right buttons to [color].
+	 * Sets the color of all right buttons to [color]. Thread-safe.
 	 */
 	@JvmStatic fun setAllRightButtons(color: Color) {
 		for (i in 0..7) {
