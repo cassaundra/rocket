@@ -15,20 +15,20 @@ class Button(coord: Int, val isTop: Boolean) {
 		/**
 		 * Gets all buttons on the top.
 		 */
-		@JvmStatic fun allTop() = (0..7).map {
+		@JvmStatic val allTop = (0..7).map {
 			Button(it, true)
 		}.toSet()
 
 		/**
 		 * Gets all buttons on the right.
 		 */
-		@JvmStatic fun allRight() = (0..7).map {
-			Button(it, true)
+		@JvmStatic val allRight = (0..7).map {
+			Button(it, false)
 		}.toSet()
 
 		/**
 		 * Gets all buttons on the top and the right.
 		 */
-		@JvmStatic fun all() = allTop() + allRight()
+		@JvmStatic val all = allTop + allRight
 	}
 }
