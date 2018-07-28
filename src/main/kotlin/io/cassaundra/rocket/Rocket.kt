@@ -124,13 +124,14 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [pad] to [color]. Thread-safe.
 	 */
-	@Synchronized @JvmStatic fun setPad(pad: Pad, color: Color) {
+	@Synchronized fun setPad(pad: Pad, color: Color) {
 		val oldColor = padRows[pad.y][pad.x]
 
 		if (oldColor === color) return
 
 		padRows[pad.y][pad.x] = color
 
+		println(color.red)
 
 		if(client != null)
 			client!!.sendPadColor(pad, color)
@@ -139,7 +140,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [pads] to [color]. Thread-safe.
 	 */
-	@JvmStatic fun setPads(pads: Set<Pad>, color: Color) {
+	@Synchronized @JvmStatic fun setPads(pads: Set<Pad>, color: Color) {
 		pads.forEach {
 			setPad(it, color)
 		}
@@ -148,7 +149,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets all pad colors (not buttons) to [color]. Thread-safe.
 	 */
-	@Synchronized @JvmStatic fun setAllPads(color: Color) {
+	@JvmStatic fun setAllPads(color: Color) {
 		padRows.forEach {
 			it.fill(color)
 		}
@@ -196,19 +197,19 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Retrieves the color of [pad].
+	 * Retrieves the color of [pad]. Thread-safe.
 	 *
 	 * If the MIDI Launchpad was disconnected, pad color information is retained.
 	 */
-	@JvmStatic fun getPadColor(pad: Pad) =
+	@Synchronized @JvmStatic fun getPadColor(pad: Pad) =
 		padRows[pad.y][pad.x]
 
 	/**
-	 * Retrieves the color of [button].
+	 * Retrieves the color of [button]. Thread-safe.
 	 *
 	 * If the MIDI Launchpad was disconnected, button color information is retained.
 	 */
-	@JvmStatic fun getButtonColor(button: Button): Color {
+	@Synchronized @JvmStatic fun getButtonColor(button: Button): Color {
 		return if (button.isTop)
 			topButtons[button.coord]
 		else
@@ -216,24 +217,24 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run.
+	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run. Thread-safe.
 	 */
-	@JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
+	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
 		if(client != null)
 			client!!.displayText(text, color, onComplete)
 	}
 
 	/**
-	 * Adds [listener] to the list of listeners.
+	 * Adds [listener] to the list of listeners. Thread-safe.
 	 */
-	@JvmStatic fun addListener(listener: LaunchpadListener) {
+	@Synchronized @JvmStatic fun addListener(listener: LaunchpadListener) {
 		listeners.add(listener)
 	}
 
 	/**
-	 * Removes [listener] from the list of listeners.
+	 * Removes [listener] from the list of listeners. Thread-safe.
 	 */
-	@JvmStatic fun removeListener(listener: LaunchpadListener) {
+	@Synchronized @JvmStatic fun removeListener(listener: LaunchpadListener) {
 		listeners.remove(listener)
 	}
 
