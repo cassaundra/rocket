@@ -5,7 +5,7 @@ package io.cassaundra.rocket
  *
  * **Example Kotlin usage:**
  * ```
- * Rocket.launchpad.displayText(
+ * Rocket.displayText(
  *     "${TextSpeed.SPEED_7}Fast text and ${TextSpeed.SPEED_2}slow text",
  *     Color.WHITE,
  *     Runnable { println("Done") }
@@ -14,7 +14,7 @@ package io.cassaundra.rocket
  *
  * **Example Java usage:**
  * ```
- * Rocket.INSTANCE.getLaunchpad().displayText(
+ * Rocket.displayText(
  *     TextSpeed.SPEED_7 + "Fast text and " + TextSpeed.SPEED_2 + "slow text",
  *     Color.WHITE,
  *     () -> System.out.println("Done")
