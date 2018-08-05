@@ -7,6 +7,9 @@ import kotlin.math.min
  * A color to be used on the Launchpad. Each RGB value should be between 0 and 63 inclusive.
  */
 data class Color(val red: Int, val green: Int, val blue: Int) {
+	/**
+	 * A color from a greyscale value.
+	 */
 	constructor(brightness: Int) : this(brightness, brightness, brightness)
 
 	companion object Util {
