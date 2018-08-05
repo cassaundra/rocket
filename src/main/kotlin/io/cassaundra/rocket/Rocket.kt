@@ -103,8 +103,8 @@ object Rocket : LaunchpadListener {
 
 	private fun close() {
 		if(clientIsAvailable()) {
-			client!!.clear()
-			client!!.close()
+			client?.clear()
+			client?.close()
 		}
 		isClosed = true
 	}
@@ -117,8 +117,7 @@ object Rocket : LaunchpadListener {
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
 
-		if(client != null)
-			client!!.clear()
+		client?.clear()
 	}
 
 	/**
@@ -131,8 +130,7 @@ object Rocket : LaunchpadListener {
 
 		padRows[pad.y][pad.x] = color
 
-		if(client != null)
-			client!!.sendPadColor(pad, color)
+		client?.sendPadColor(pad, color)
 	}
 
 	/**
@@ -152,8 +150,7 @@ object Rocket : LaunchpadListener {
 			it.fill(color)
 		}
 
-		if(client != null)
-			client!!.sendAllPadColors(color)
+		client?.sendAllPadColors(color)
 	}
 
 	/**
@@ -172,8 +169,7 @@ object Rocket : LaunchpadListener {
 
 		if (oldColor === color) return
 
-		if(client != null)
-			client!!.sendButtonColor(button, color)
+		client?.sendButtonColor(button, color)
 	}
 
 	/**
@@ -227,8 +223,7 @@ object Rocket : LaunchpadListener {
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run. Thread-safe.
 	 */
 	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
-		if(client != null)
-			client!!.displayText(text, color, onComplete)
+		client?.displayText(text, color, onComplete)
 	}
 
 	/**
