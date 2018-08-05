@@ -5,58 +5,43 @@ import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 import javax.sound.midi.*
 
-class MidiLaunchpad @Throws(MidiUnavailableException::class)
+internal class MidiLaunchpad @Throws(MidiUnavailableException::class)
 constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClient {
 	private val logger = LoggerFactory.getLogger(MidiLaunchpad::class.java)
 
 	private val receiver: Receiver? // LP -> Rocket
 	private val transmitter: Transmitter? // Rocket -> LP
 
-	private var openedOutputDevice = false
-	private var openedInputDevice = false
-
 	private var onTextComplete: Runnable = Runnable {  }
 
 	init {
-		val outputDevice = configuration!!.outputDevice
-		if (outputDevice != null) {
-			if (!outputDevice.isOpen) {
-				outputDevice.open()
-			}
-			openedOutputDevice = true
-			receiver = outputDevice.receiver
-		} else
-			receiver = null
+		// setup output device
+		val outputDevice = configuration?.outputDevice
 
-		val inputDevice = configuration.inputDevice
-		if (inputDevice != null) {
-			if (!inputDevice.isOpen) {
-				inputDevice.open()
-			}
-			openedInputDevice = true
-			transmitter = inputDevice.transmitter
-		} else
-			transmitter = null
+		if(outputDevice?.isOpen == false) outputDevice.open()
+		receiver = outputDevice?.receiver
+
+		// setup input device
+		val inputDevice = configuration?.inputDevice
+
+		if(inputDevice?.isOpen == false) inputDevice.open()
+		transmitter = inputDevice?.transmitter
 	}
 
 	override fun close() {
-		if (configuration == null) {
+		if (configuration == null)
 			return
-		}
-		if (openedOutputDevice) {
-			val outputDevice = configuration.outputDevice
-			if (outputDevice != null && outputDevice.isOpen)
-				outputDevice.close()
-		}
-		if (openedInputDevice) {
-			val inputDevice = configuration.inputDevice
-			if (inputDevice != null && inputDevice.isOpen)
-				inputDevice.close()
-		}
+
+		if(configuration.outputDevice?.isOpen == true)
+			configuration.outputDevice.close()
+
+		if(configuration.inputDevice?.isOpen == true)
+			configuration.inputDevice.close()
 	}
 
 	override fun setListener(listener: LaunchpadListener) {
-		transmitter!!.receiver = MidiLaunchpadReceiver(listener)
+		if (transmitter != null)
+			transmitter.receiver = MidiLaunchpadReceiver(listener)
 	}
 
 	override fun sendPadColor(pad: Pad, color: Color) {
@@ -113,21 +98,17 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	@Throws(InvalidMidiDataException::class)
 	private fun sendShortMessage(command: Int, channel: Int, controller: Int, data: Int) {
-		val message = ShortMessage()
-		message.setMessage(command, channel, controller, data)
-		send(message)
+		send(ShortMessage(command, channel, controller, data))
 	}
 
 	@Throws(InvalidMidiDataException::class)
 	private fun sendSysExMessage(data: ByteArray) {
-		val message = SysexMessage()
-		message.setMessage(data, data.size)
-		send(message)
+		send(SysexMessage(data, data.size))
 	}
 
 
 	private fun send(message: MidiMessage) {
-		receiver!!.send(message, -1)
+		receiver?.send(message, -1)
 	}
 
 	private fun getNote(pad: Pad): Int {
@@ -136,14 +117,13 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	// listening
 
-	inner class MidiLaunchpadReceiver(private var launchpadListener: LaunchpadListener) : Receiver {
-
+	inner class MidiLaunchpadReceiver(var launchpadListener: LaunchpadListener) : Receiver {
 		override fun send(message: MidiMessage, timestamp: Long) = when (message) {
 			is ShortMessage ->
 				handleShortMessage(message)
 			is SysexMessage -> {
 				onTextComplete.run()
-				onTextComplete = Runnable {  }
+				onTextComplete = Runnable { }
 			}
 			else -> throw RuntimeException("Unknown event: $message")
 		}
