@@ -108,7 +108,8 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 
 	private fun send(message: MidiMessage) {
-		receiver?.send(message, -1)
+		if(configuration?.outputDevice?.isOpen == true)
+			receiver?.send(message, -1)
 	}
 
 	private fun getNote(pad: Pad): Int {
