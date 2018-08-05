@@ -28,7 +28,7 @@ Alternatively, with Gradle:
 
 ```
 dependencies {
-  compile 'io.cassaundra:rocket:1.1.0'
+  compile 'io.cassaundra:rocket:1.1.1'
 }
 ```
 
