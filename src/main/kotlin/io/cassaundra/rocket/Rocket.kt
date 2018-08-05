@@ -167,7 +167,7 @@ object Rocket : LaunchpadListener {
 			rightButtons[button.coord] = color
 		}
 
-		if (oldColor === color) return
+		if (oldColor == color) return
 
 		client?.sendButtonColor(button, color)
 	}
