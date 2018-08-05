@@ -70,10 +70,8 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	}
 
 	override fun sendAllPadColors(color: Color) {
-		for (y in 0..7) {
-			for (x in 0..7) {
-				sendPadColor(Pad(x, y), color)
-			}
+		Pad.all.forEach {
+			sendPadColor(it, color)
 		}
 	}
 
