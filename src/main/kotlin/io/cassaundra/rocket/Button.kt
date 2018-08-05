@@ -6,7 +6,7 @@ package io.cassaundra.rocket
  *
  * @property[coord] The button's coordinate, in the range 0..7.
  *
- * @property[isTop] Whether or not a button is located on the top of the Launchpad. If false, it's located on the right side.
+ * @property[isTop] Whether or not the button is located on the top of the Launchpad. If false, it's located on the right side.
  */
 class Button(coord: Int, val isTop: Boolean) {
 	val coord: Int = if (coord in 0..7) coord else throw IllegalArgumentException("coord not in 0..7")
