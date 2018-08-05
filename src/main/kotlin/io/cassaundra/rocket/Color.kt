@@ -7,10 +7,12 @@ import kotlin.math.min
  * A color to be used on the Launchpad. Each RGB value should be between 0 and 63 inclusive.
  */
 data class Color(val red: Int, val green: Int, val blue: Int) {
-	companion object {
-		@JvmField val OFF = Color(0, 0, 0)
+	constructor(brightness: Int) : this(brightness, brightness, brightness)
 
-		@JvmField val WHITE = Color(63, 63, 63)
+	companion object Util {
+		@JvmField val OFF = Color(0)
+		@JvmField val GRAY = Color(31)
+		@JvmField val WHITE = Color(63)
 
 		@JvmField val RED = Color(63, 0, 0)
 		@JvmField val GREEN = Color(0, 63, 0)
@@ -24,7 +26,7 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 		 *
 		 * Each HSV value should be in the 0..1 float range.
 		 */
-		@JvmStatic fun fromHSV(hue: Float, saturation: Float, value: Float): Color {
+		@JvmStatic fun fromHSV(hue: Float, saturation: Float = 1f, value: Float = 1f): Color {
 			var h = hue % 1f
 			if (h < 0) {
 				h += 1
