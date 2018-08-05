@@ -4,7 +4,7 @@ import javax.sound.midi.MidiDevice
 import javax.sound.midi.MidiSystem
 import javax.sound.midi.MidiUnavailableException
 
-class MidiDeviceConfiguration(val inputDevice: MidiDevice?, val outputDevice: MidiDevice?) {
+internal class MidiDeviceConfiguration(val inputDevice: MidiDevice?, val outputDevice: MidiDevice?) {
 
 	companion object {
 		const val DEVICE_SIGNATURE = "Launchpad MK2"
