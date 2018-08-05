@@ -1,6 +1,5 @@
 package io.cassaundra.rocket
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import io.cassaundra.rocket.midi.MidiDeviceConfiguration
 import io.cassaundra.rocket.midi.MidiLaunchpad
 import org.slf4j.LoggerFactory
