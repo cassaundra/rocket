@@ -12,7 +12,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	private val receiver: Receiver? // LP -> Rocket
 	private val transmitter: Transmitter? // Rocket -> LP
 
-	private var onTextComplete: Runnable = Runnable {  }
+	private var onTextComplete: Runnable = Runnable { }
 
 	init {
 		// setup output device
@@ -29,7 +29,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	}
 
 	override fun close() {
-		if (configuration == null)
+		if(configuration == null)
 			return
 
 		if(configuration.outputDevice?.isOpen == true)
@@ -40,14 +40,14 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	}
 
 	override fun setListener(listener: LaunchpadListener) {
-		if (transmitter != null)
+		if(transmitter != null)
 			transmitter.receiver = MidiLaunchpadReceiver(listener)
 	}
 
 	override fun sendPadColor(pad: Pad, color: Color) {
 		try {
 			sendLEDChange(getNote(pad), color)
-		} catch (e: InvalidMidiDataException) {
+		} catch(e: InvalidMidiDataException) {
 			e.printStackTrace()
 		}
 
@@ -55,12 +55,12 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 	override fun sendButtonColor(button: Button, color: Color) {
 		try {
-			if (button.isTop) {
+			if(button.isTop) {
 				sendLEDChange(button.coord + 104, color)
 			} else {
 				sendLEDChange((7 - button.coord) * 10 + 19, color)
 			}
-		} catch (e: InvalidMidiDataException) {
+		} catch(e: InvalidMidiDataException) {
 			logger.error("Invalid MIDI data", e)
 		}
 	}
@@ -117,7 +117,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 	// listening
 
 	inner class MidiLaunchpadReceiver(var launchpadListener: LaunchpadListener) : Receiver {
-		override fun send(message: MidiMessage, timestamp: Long) = when (message) {
+		override fun send(message: MidiMessage, timestamp: Long) = when(message) {
 			is ShortMessage ->
 				handleShortMessage(message)
 			is SysexMessage -> {
@@ -132,7 +132,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 			val note = message.data1
 			val velocity = message.data2
 
-			when (status) {
+			when(status) {
 				ShortMessage.NOTE_ON -> handleNoteOnMessage(note, velocity)
 				ShortMessage.CONTROL_CHANGE -> handleControlChangeMessage(note, velocity)
 				else -> throw RuntimeException("Unknown event: $message")
@@ -141,14 +141,14 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 		private fun handleNoteOnMessage(note: Int, velocity: Int) {
 			val pad: Pad? = Pad.fromMidi(note)
-			if (pad != null) {
-				if (velocity == 0)
+			if(pad != null) {
+				if(velocity == 0)
 					launchpadListener.onPadUp(pad)
 				else
 					launchpadListener.onPadDown(pad)
 			} else {
 				val button = Button.fromMidiRight(note)!!
-				if (velocity == 0)
+				if(velocity == 0)
 					launchpadListener.onButtonUp(button)
 				else
 					launchpadListener.onButtonDown(button)
@@ -157,7 +157,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 
 		private fun handleControlChangeMessage(note: Int, velocity: Int) {
 			val button = Button.fromMidiTop(note)
-			if (velocity == 0) {
+			if(velocity == 0) {
 				launchpadListener.onButtonUp(button)
 			} else {
 				launchpadListener.onButtonDown(button)

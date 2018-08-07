@@ -31,7 +31,7 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 		 */
 		@JvmStatic fun fromHSV(hue: Float, saturation: Float = 1f, value: Float = 1f): Color {
 			var h = hue % 1f
-			if (h < 0) {
+			if(h < 0) {
 				h += 1
 			}
 
@@ -42,7 +42,7 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 			var g = 0f
 			var b = 0f
 
-			val i : Int = (h * 6).toInt()
+			val i: Int = (h * 6).toInt()
 			val f = h * 6 - i
 			val p = v * (1 - s)
 			val q = v * (1 - f * s)
