@@ -20,7 +20,7 @@ class Pad(x: Int, y: Int) {
 		/**
 		 * Gets a rectangle of pads with corner points [p1] and [p2].
 		 */
-		@JvmStatic fun rect(p1: Pad, p2: Pad) : Set<Pad> {
+		@JvmStatic fun rect(p1: Pad, p2: Pad): Set<Pad> {
 			val x1: Int = Math.min(p1.x, p2.x)
 			val x2: Int = Math.max(p1.x, p2.x)
 			val y1: Int = Math.min(p1.y, p2.y)
@@ -38,7 +38,7 @@ class Pad(x: Int, y: Int) {
 		/**
 		 * Gets the outline pads of a rectangle with corner points [p1] and [p2].
 		 */
-		@JvmStatic fun rectOutline(p1: Pad, p2: Pad) : Set<Pad> {
+		@JvmStatic fun rectOutline(p1: Pad, p2: Pad): Set<Pad> {
 			val pads: MutableSet<Pad> = mutableSetOf()
 
 			// add horizontal
@@ -65,7 +65,7 @@ class Pad(x: Int, y: Int) {
 		/**
 		 * Gets a thin line segment from [p1] to [p2].
 		 */
-		@JvmStatic fun line(p1: Pad, p2: Pad) : Set<Pad> {
+		@JvmStatic fun line(p1: Pad, p2: Pad): Set<Pad> {
 			val xDiff = p2.x - p1.x
 			val yDiff = p2.y - p1.y
 
@@ -105,20 +105,20 @@ class Pad(x: Int, y: Int) {
 		 * @see Button.allRight
 		 */
 		@JvmStatic val all = (0..7).flatMap { y ->
-			(0..7).map { x->
+			(0..7).map { x ->
 				Pad(x, y)
 			}
 		}.toSet()
 	}
 
 	override fun equals(other: Any?): Boolean {
-		if (this === other) return true
-		if (javaClass != other?.javaClass) return false
+		if(this === other) return true
+		if(javaClass != other?.javaClass) return false
 
 		other as Pad
 
-		if (x != other.x) return false
-		if (y != other.y) return false
+		if(x != other.x) return false
+		if(y != other.y) return false
 
 		return true
 	}

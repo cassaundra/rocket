@@ -39,7 +39,7 @@ object Rocket : LaunchpadListener {
 	 */
 	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3) {
 		if(hasBeganScanning) return
-		
+
 		hasBeganScanning = true
 
 		val executor = Executors.newScheduledThreadPool(1)
@@ -49,13 +49,13 @@ object Rocket : LaunchpadListener {
 	private fun scan() {
 		val config = MidiDeviceConfiguration.autodetect()
 
-		if (config.inputDevice == null || config.outputDevice == null) {
+		if(config.inputDevice == null || config.outputDevice == null) {
 			setLaunchpadClient(null)
 		} else {
-			if (client == null) {
+			if(client == null) {
 				try {
 					setLaunchpadClient(MidiLaunchpad(config))
-				} catch (exc: MidiUnavailableException) {
+				} catch(exc: MidiUnavailableException) {
 					logger.error("Could not setup MIDI launchpad", exc)
 				}
 			}
@@ -65,7 +65,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Whether or not a MIDI Launchpad is connected.
 	 */
-	@JvmStatic fun clientIsAvailable() : Boolean {
+	@JvmStatic fun clientIsAvailable(): Boolean {
 		if(isClosed) return false
 
 		scan()
@@ -82,13 +82,13 @@ object Rocket : LaunchpadListener {
 
 		client.clear()
 
-		for (i in 0..7) {
+		for(i in 0..7) {
 			client.sendButtonColor(Button(i, isTop = true), topButtons[i])
 			client.sendButtonColor(Button(i, isTop = false), rightButtons[i])
 		}
 
-		for (y in 0..7) {
-			for (x in 0..7) {
+		for(y in 0..7) {
+			for(x in 0..7) {
 				client.sendPadColor(Pad(x, y), padRows[y][x])
 			}
 		}
@@ -125,7 +125,7 @@ object Rocket : LaunchpadListener {
 	@Synchronized fun setPad(pad: Pad, color: Color) {
 		val oldColor = padRows[pad.y][pad.x]
 
-		if (oldColor === color) return
+		if(oldColor === color) return
 
 		padRows[pad.y][pad.x] = color
 
@@ -158,7 +158,7 @@ object Rocket : LaunchpadListener {
 	@Synchronized @JvmStatic fun setButton(button: Button, color: Color) {
 		val oldColor: Color
 
-		if (button.isTop) {
+		if(button.isTop) {
 			oldColor = topButtons[button.coord]
 			topButtons[button.coord] = color
 		} else {
@@ -166,7 +166,7 @@ object Rocket : LaunchpadListener {
 			rightButtons[button.coord] = color
 		}
 
-		if (oldColor == color) return
+		if(oldColor == color) return
 
 		client?.sendButtonColor(button, color)
 	}
@@ -184,7 +184,7 @@ object Rocket : LaunchpadListener {
 	 * Sets the color of all top buttons to [color]. Thread-safe.
 	 */
 	@JvmStatic fun setAllTopButtons(color: Color) {
-		for (i in 0..7) {
+		for(i in 0..7) {
 			setButton(Button(i, isTop = true), color)
 		}
 	}
@@ -193,7 +193,7 @@ object Rocket : LaunchpadListener {
 	 * Sets the color of all right buttons to [color]. Thread-safe.
 	 */
 	@JvmStatic fun setAllRightButtons(color: Color) {
-		for (i in 0..7) {
+		for(i in 0..7) {
 			setButton(Button(i, isTop = false), color)
 		}
 	}
@@ -204,7 +204,7 @@ object Rocket : LaunchpadListener {
 	 * If the MIDI Launchpad was disconnected, pad color information is retained.
 	 */
 	@Synchronized @JvmStatic fun getPadColor(pad: Pad) =
-		padRows[pad.y][pad.x]
+			padRows[pad.y][pad.x]
 
 	/**
 	 * Retrieves the color of [button]. Thread-safe.
@@ -212,7 +212,7 @@ object Rocket : LaunchpadListener {
 	 * If the MIDI Launchpad was disconnected, button color information is retained.
 	 */
 	@Synchronized @JvmStatic fun getButtonColor(button: Button): Color {
-		return if (button.isTop)
+		return if(button.isTop)
 			topButtons[button.coord]
 		else
 			rightButtons[button.coord]
