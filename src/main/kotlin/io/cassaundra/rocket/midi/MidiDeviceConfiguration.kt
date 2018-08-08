@@ -11,38 +11,22 @@ internal class MidiDeviceConfiguration(val inputDevice: MidiDevice?, val outputD
 
 		@Throws(MidiUnavailableException::class)
 		fun autodetect(): MidiDeviceConfiguration {
-			val inputDevice = autodetectInputDevice()
-			val outputDevice = autodetectOutputDevice()
+			var inputDevice: MidiDevice? = null
+			var outputDevice: MidiDevice? = null
+
+			val midiDeviceInfo = MidiSystem.getMidiDeviceInfo()
+			for(info in midiDeviceInfo) {
+				if(info.description.contains(DEVICE_SIGNATURE) || info.name.contains(DEVICE_SIGNATURE)) {
+					val device = MidiSystem.getMidiDevice(info)
+					when {
+						device.maxTransmitters == -1 && inputDevice == null -> inputDevice = device
+						device.maxReceivers == -1 && outputDevice == null -> outputDevice = device
+						else -> device.close()
+					}
+				}
+			}
+
 			return MidiDeviceConfiguration(inputDevice, outputDevice)
-		}
-
-		@Throws(MidiUnavailableException::class)
-		private fun autodetectOutputDevice(): MidiDevice? {
-			val midiDeviceInfo = MidiSystem.getMidiDeviceInfo()
-			for (info in midiDeviceInfo) {
-				if (info.description.contains(DEVICE_SIGNATURE) || info.name.contains(DEVICE_SIGNATURE)) {
-					val device = MidiSystem.getMidiDevice(info)
-					if (device.maxReceivers == -1) {
-						return device
-					}
-				}
-			}
-			return null
-		}
-
-		@Throws(MidiUnavailableException::class)
-		private fun autodetectInputDevice(): MidiDevice? {
-			val midiDeviceInfo = MidiSystem.getMidiDeviceInfo()
-			for (info in midiDeviceInfo) {
-				if (info.description.contains(DEVICE_SIGNATURE)) {
-					val device = MidiSystem.getMidiDevice(info)
-					if (device.maxTransmitters == -1) {
-						return device
-					}
-					device.close()
-				}
-			}
-			return null
 		}
 	}
 
