@@ -194,3 +194,4 @@ Rocket.displayText(
 ## TODO
 * Text only displays in white (MIDI Launchpad limitation)
 * Add contributing documentation
+* Use Gradle instead of Maven
