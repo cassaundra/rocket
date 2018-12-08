@@ -1,28 +1,32 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id "java"
+    id "org.jetbrains.kotlin.jvm" version "1.3.11"
+}
 
 group = 'io.cassaundra'
 version = '1.1.2'
 
-description = """rocket"""
+description = "rocket"
 
-sourceCompatibility = 1.5
-targetCompatibility = 1.5
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
 repositories {
-        
-     maven { url "http://repo.maven.apache.org/maven2" }
+     mavenCentral()
 }
+
 dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version:'1.2.51'
-    compile group: 'commons-lang', name: 'commons-lang', version:'2.6'
-    compile group: 'com.google.guava', name: 'guava', version:'23.5-jre'
-    compile group: 'uk.co.xfactory-librarians', name: 'coremidi4j', version:'1.1'
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version:'1.2.51'
-    testCompile group: 'junit', name: 'junit', version:'4.12'
-    testCompile group: 'com.nhaarman', name: 'mockito-kotlin', version:'1.6.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.11"
+    compile "org.slf4j:slf4j-api:1.7.25"
+    compile "commons-lang:commons-lang:2.6"
+    compile "com.google.guava:guava:23.5-jre"
+    compile "uk.co.xfactory-librarians:coremidi4j:1.1"
+
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:1.3.11"
+    testCompile "junit:junit:4.12"
+    testCompile "com.nhaarman:mockito-kotlin:1.6.0"
 }
