@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 import javax.sound.midi.MidiUnavailableException
 
 /**
- * Manages [Launchpad]s and MIDI scanning.
+ * Manages Launchpads and MIDI scanning.
  *
  * If the MIDI device has not been found, or if it was disconnected, pad/button colors and listeners are retained.
  */
@@ -234,8 +234,12 @@ object Rocket : LaunchpadListener {
 
 	/**
 	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run. Thread-safe.
+	 *
+	 * See colors: https://customer.novationmusic.com/sites/customer/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide-v1-02.pdf
+	 *
+	 * @param[color] The MIDI velocity to send
 	 */
-	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
+	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Int, onComplete: Runnable = Runnable {}) {
 		client?.displayText(text, color, onComplete)
 	}
 
