@@ -9,6 +9,6 @@ interface LaunchpadClient {
 	fun sendButtonColor(button: Button, color: Color)
 	fun clear()
 	fun sendAllPadColors(color: Color)
-	fun displayText(text: String, color: Color, onComplete: Runnable)
+	fun displayText(text: String, color: Int, onComplete: Runnable)
 	fun close()
 }
