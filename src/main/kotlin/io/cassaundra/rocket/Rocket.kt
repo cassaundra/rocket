@@ -2,6 +2,7 @@ package io.cassaundra.rocket
 
 import io.cassaundra.rocket.midi.MidiDeviceConfiguration
 import io.cassaundra.rocket.midi.MidiLaunchpad
+import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -23,7 +24,7 @@ object Rocket : LaunchpadListener {
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
-	private var hasBeganScanning = false
+	private var scanningJob: Job? = null
 	private var isClosed = false
 
 	init {
@@ -35,15 +36,30 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Starts MIDI scanning. Will rescan every [scanRateSeconds] seconds (default is 3).
+	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 3).
 	 */
-	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3) {
-		if(hasBeganScanning) return
+	@JvmOverloads @JvmStatic fun beginMidiScan(scanRateSeconds: Long = 3) {
+		if(scanningJob != null && scanningJob!!.isActive)
+			return
 
-		hasBeganScanning = true
+		val millis = TimeUnit.SECONDS.toMillis(scanRateSeconds)
 
-		val executor = Executors.newScheduledThreadPool(1)
-		executor.scheduleAtFixedRate(::scan, 0, scanRateSeconds, TimeUnit.SECONDS)
+		val threadPool = Executors.newSingleThreadExecutor()
+		val dispatcher = threadPool.asCoroutineDispatcher()
+
+		GlobalScope.launch(dispatcher) {
+			while(isActive) {
+				scan()
+				delay(millis)
+			}
+		}
+	}
+
+	/**
+	 * Stops scanning for the MIDI device.
+	 */
+	@JvmStatic fun stopMidiScan() {
+		scanningJob?.cancel()
 	}
 
 	private fun scan() {
@@ -51,13 +67,11 @@ object Rocket : LaunchpadListener {
 
 		if(config.inputDevice == null || config.outputDevice == null) {
 			setLaunchpadClient(null)
-		} else {
-			if(client == null) {
-				try {
-					setLaunchpadClient(MidiLaunchpad(config))
-				} catch(exc: MidiUnavailableException) {
-					logger.error("Could not setup MIDI launchpad", exc)
-				}
+		} else if(client == null) {
+			try {
+				setLaunchpadClient(MidiLaunchpad(config))
+			} catch(exc: MidiUnavailableException) {
+				logger.error("Could not setup MIDI launchpad", exc)
 			}
 		}
 	}
