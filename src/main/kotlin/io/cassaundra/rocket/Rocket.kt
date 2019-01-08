@@ -38,7 +38,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 3).
 	 */
-	@JvmOverloads @JvmStatic fun beginMidiScan(scanRateSeconds: Long = 3) {
+	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3, onSuccess: () -> Unit) {
 		if(scanningJob != null && scanningJob!!.isActive)
 			return
 
@@ -49,7 +49,7 @@ object Rocket : LaunchpadListener {
 
 		GlobalScope.launch(dispatcher) {
 			while(isActive) {
-				scan()
+				scan(onSuccess)
 				delay(millis)
 			}
 		}
@@ -58,18 +58,19 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Stops scanning for the MIDI device.
 	 */
-	@JvmStatic fun stopMidiScan() {
+	@JvmStatic fun stopScan() {
 		scanningJob?.cancel()
 	}
 
-	private fun scan() {
+	private fun scan(onSuccess: () -> Unit) {
 		val config = MidiDeviceConfiguration.autodetect()
 
 		if(config.inputDevice == null || config.outputDevice == null) {
 			setLaunchpadClient(null)
-		} else if(client == null) {
+		} else if(client == null || client !is LaunchpadClient) {
 			try {
 				setLaunchpadClient(MidiLaunchpad(config))
+				onSuccess()
 			} catch(exc: MidiUnavailableException) {
 				logger.error("Could not setup MIDI launchpad", exc)
 			}
@@ -79,10 +80,10 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Whether or not a MIDI Launchpad is connected.
 	 */
-	@JvmStatic fun clientIsAvailable(): Boolean {
+	@JvmStatic fun midiClientIsAvailable(): Boolean {
 		if(isClosed) return false
 
-		scan()
+		scan({})
 		return client != null
 	}
 
@@ -114,12 +115,16 @@ object Rocket : LaunchpadListener {
 		})
 	}
 
-	private fun close() {
-		if(clientIsAvailable()) {
+	/**
+	 * Closes MIDI device if open and stops scanning
+	 */
+	fun close() {
+		if(midiClientIsAvailable()) {
 			client?.clear()
 			client?.close()
 		}
 		isClosed = true
+		stopScan()
 	}
 
 	/**
