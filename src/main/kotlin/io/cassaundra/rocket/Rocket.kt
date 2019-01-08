@@ -38,7 +38,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 3).
 	 */
-	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3, onSuccess: () -> Unit) {
+	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3, onSuccess: () -> Unit = {}) {
 		if(scanningJob != null && scanningJob!!.isActive)
 			return
 
