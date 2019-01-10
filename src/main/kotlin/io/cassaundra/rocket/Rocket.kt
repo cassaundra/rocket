@@ -38,7 +38,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 3).
 	 */
-	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3, onSuccess: () -> Unit = {}) {
+	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3, onSuccess: Runnable = Runnable {}) {
 		if(scanningJob != null && scanningJob!!.isActive)
 			return
 
@@ -62,7 +62,7 @@ object Rocket : LaunchpadListener {
 		scanningJob?.cancel()
 	}
 
-	private fun scan(onSuccess: () -> Unit) {
+	private fun scan(onSuccess: Runnable) {
 		val config = MidiDeviceConfiguration.autodetect()
 
 		if(config.inputDevice == null || config.outputDevice == null) {
@@ -70,7 +70,7 @@ object Rocket : LaunchpadListener {
 		} else if(client == null || client !is LaunchpadClient) {
 			try {
 				setLaunchpadClient(MidiLaunchpad(config))
-				onSuccess()
+				onSuccess.run()
 			} catch(exc: MidiUnavailableException) {
 				logger.error("Could not setup MIDI launchpad", exc)
 			}
@@ -83,7 +83,7 @@ object Rocket : LaunchpadListener {
 	@JvmStatic fun midiClientIsAvailable(): Boolean {
 		if(isClosed) return false
 
-		scan({})
+		scan(Runnable {})
 		return client != null
 	}
 
