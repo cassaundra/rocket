@@ -192,6 +192,5 @@ Rocket.displayText(
 `Pad.Util` provides several useful utility functions, like rectangles, line segments, and more.
 
 ## TODO
-* Text only displays in white (MIDI Launchpad limitation)
 * Add contributing documentation
-* Use Gradle instead of Maven
+* Add support for multiple Launchpads (I have only one)
