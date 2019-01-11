@@ -1,10 +1,10 @@
 package io.cassaundra.rocket
 
 /**
- * Used for listening to events from a [Launchpad].
+ * Used for listening to events from a Launchpad.
  *
- * @see [Launchpad.addListener]
- * @see [Launchpad.removeListener]
+ * @see [Rocket.addListener]
+ * @see [Rocket.removeListener]
  */
 interface LaunchpadListener {
 	/**
