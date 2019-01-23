@@ -50,7 +50,6 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		} catch(e: InvalidMidiDataException) {
 			e.printStackTrace()
 		}
-
 	}
 
 	override fun sendButtonColor(button: Button, color: Color) {
@@ -99,11 +98,12 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		send(ShortMessage(command, channel, controller, data))
 	}
 
-	val byteHeader = arrayOf(240, 0, 32, 41, 2, 24).map { it.toByte() }.toByteArray()
+	val byteHeader = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte())
 
 	@Throws(InvalidMidiDataException::class)
 	private fun sendSysExMessage(data: ByteArray) {
-		send(SysexMessage(byteHeader + data, data.size))
+		val bytes = byteHeader + data
+		send(SysexMessage(bytes, bytes.size))
 	}
 
 

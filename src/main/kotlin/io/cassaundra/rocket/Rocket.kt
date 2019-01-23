@@ -36,9 +36,9 @@ object Rocket : LaunchpadListener {
 	}
 
 	/**
-	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 3).
+	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 1).
 	 */
-	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 3, onSuccess: Runnable = Runnable {}) {
+	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 1, onSuccess: Runnable = Runnable {}) {
 		if(scanningJob != null && scanningJob!!.isActive)
 			return
 
@@ -244,7 +244,7 @@ object Rocket : LaunchpadListener {
 	 *
 	 * @param[color] The MIDI velocity to send
 	 */
-	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Int, onComplete: Runnable = Runnable {}) {
+	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Int = 3, onComplete: Runnable = Runnable {}) {
 		client?.displayText(text, color, onComplete)
 	}
 
