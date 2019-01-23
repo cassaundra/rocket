@@ -171,8 +171,7 @@ If you need to know when text has finished scrolling, you can use the onComplete
 ```kotlin
 Rocket.displayText(
     "Hello world!",
-    Color.WHITE,
-    Runnable { println("Done!") }
+    onComplete = Runnable { println("Done!") }
 )
 
 ```
@@ -181,9 +180,7 @@ In Java,
 
 ```java
 Rocket.displayText(
-    "Hello world!",
-    Color.WHITE,
-    () -> System.out.println("Done!")
+    "Hello world!"
 );
 ```
 
