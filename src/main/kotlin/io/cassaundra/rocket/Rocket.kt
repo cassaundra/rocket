@@ -118,7 +118,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Closes MIDI device if open and stops scanning
 	 */
-	fun close() {
+	@JvmStatic fun close() {
 		if(midiClientIsAvailable()) {
 			client?.clear()
 			client?.close()
@@ -141,7 +141,7 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [pad] to [color]. Thread-safe.
 	 */
-	@Synchronized fun setPad(pad: Pad, color: Color) {
+	@Synchronized @JvmStatic fun setPad(pad: Pad, color: Color) {
 		val oldColor = padRows[pad.y][pad.x]
 
 		if(oldColor === color) return
