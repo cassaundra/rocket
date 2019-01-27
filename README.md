@@ -130,8 +130,7 @@ You can call the Launchpad's built-in MIDI command for displaying text with `Lau
 
 ```kotlin
 Rocket.displayText(
-    "Hello world!",
-    Color.WHITE
+    "Hello world!"
 )
 ```
 
@@ -139,8 +138,7 @@ In Java,
 
 ```java
 Rocket.displayText(
-    "Hello world!",
-    Color.WHITE
+    "Hello world!"
 );
 ```
 
