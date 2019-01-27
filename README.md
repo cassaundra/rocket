@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.2.51-blue.svg)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.11-blue.svg)](http://kotlinlang.org)
 
 <img src="Logo.png" width=192 height=192>
 
