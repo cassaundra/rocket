@@ -150,8 +150,7 @@ You can control the text scrolling speed per-character with seven different avai
 
 ```kotlin
 Rocket.displayText(
-    "Hello! ${TextSpeed.SPEED_1}Let's take this slower.",
-    Color.WHITE
+    "Hello! ${TextSpeed.SPEED_1}Let's take this slower."
 )
 ```
 
@@ -159,8 +158,7 @@ In Java,
 
 ```java
 Rocket.displayText(
-    "Hello! " + TextSpeed.SPEED_1 + "Let's take this slower.",
-    Color.WHITE,
+    "Hello! " + TextSpeed.SPEED_1 + "Let's take this slower."
 );
 ```
 
