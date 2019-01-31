@@ -12,6 +12,7 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 	 */
 	constructor(brightness: Int) : this(brightness, brightness, brightness)
 
+	@Suppress("unused")
 	companion object Util {
 		@JvmField val OFF = Color(0)
 		@JvmField val GRAY = Color(31)
