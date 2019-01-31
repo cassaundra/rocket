@@ -21,6 +21,7 @@ package io.cassaundra.rocket
  * );
  * ```
  */
+@Suppress("unused")
 object TextSpeed {
 	const val SPEED_0 = 1.toChar()
 	const val SPEED_1 = 2.toChar()

@@ -98,7 +98,7 @@ constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClie
 		send(ShortMessage(command, channel, controller, data))
 	}
 
-	val byteHeader = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte())
+	private val byteHeader = byteArrayOf(240.toByte(), 0.toByte(), 32.toByte(), 41.toByte(), 2.toByte(), 24.toByte())
 
 	@Throws(InvalidMidiDataException::class)
 	private fun sendSysExMessage(data: ByteArray) {
