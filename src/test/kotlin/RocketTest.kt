@@ -12,7 +12,7 @@ class RocketTest {
 		// given
 		val pads = setOf(Pad(3, 7), Pad(2, 4))
 
-		Rocket.setLaunchpadClient(launchpadClientMock)
+		Rocket.client = launchpadClientMock
 
 		// when
 		Rocket.setPads(pads, Color.WHITE)
@@ -33,7 +33,7 @@ class RocketTest {
 		// given
 		val buttons = setOf(Button(3, true), Button(2, false))
 
-		Rocket.setLaunchpadClient(launchpadClientMock)
+		Rocket.client = launchpadClientMock
 
 		// when
 		Rocket.setButtons(buttons, Color.WHITE)
