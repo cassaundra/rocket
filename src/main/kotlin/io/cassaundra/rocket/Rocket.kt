@@ -31,6 +31,7 @@ object Rocket : LaunchpadListener {
 	var client: LaunchpadClient? = null
 		set(value) {
 			setLaunchpadClient(value)
+			field = value
 		}
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
@@ -92,8 +93,6 @@ object Rocket : LaunchpadListener {
 	}
 
 	private fun setLaunchpadClient(client: LaunchpadClient?) {
-		this.client = client
-
 		if(client == null)
 			return
 
