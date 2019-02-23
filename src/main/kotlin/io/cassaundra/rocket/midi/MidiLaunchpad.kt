@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 import javax.sound.midi.*
 
-internal class MidiLaunchpad @Throws(MidiUnavailableException::class)
-constructor(private val configuration: MidiDeviceConfiguration?) : LaunchpadClient {
+class MidiLaunchpad(private val configuration: MidiDeviceConfiguration?) : LaunchpadClient {
 	private val logger = LoggerFactory.getLogger(MidiLaunchpad::class.java)
 
 	private val receiver: Receiver? // LP -> Rocket

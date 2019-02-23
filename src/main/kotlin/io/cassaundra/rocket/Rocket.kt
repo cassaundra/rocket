@@ -13,6 +13,7 @@ import javax.sound.midi.MidiUnavailableException
  *
  * If the MIDI device has not been found, or if it was disconnected, pad/button colors and listeners are retained.
  */
+@Suppress("unused")
 object Rocket : LaunchpadListener {
 	private val listeners: MutableList<LaunchpadListener> = arrayListOf()
 
@@ -130,7 +131,6 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets all pads and buttons to [Color.OFF]. Thread-safe.
 	 */
-	@Suppress("unused")
 	@Synchronized @JvmStatic fun clearAll() {
 		padRows.forEach { it.fill(Color.OFF) }
 		topButtons.fill(Color.OFF)
@@ -142,7 +142,6 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [pad] to [color]. Thread-safe.
 	 */
-	@Suppress("unused")
 	@Synchronized @JvmStatic fun setPad(pad: Pad, color: Color) {
 		val oldColor = padRows[pad.y][pad.x]
 
@@ -165,7 +164,6 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets all pad colors (not buttons) to [color]. Thread-safe.
 	 */
-	@Suppress("unused")
 	@JvmStatic fun setAllPads(color: Color) {
 		padRows.forEach {
 			it.fill(color)
@@ -205,7 +203,6 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of all top buttons to [color]. Thread-safe.
 	 */
-	@Suppress("unused")
 	@JvmStatic fun setAllTopButtons(color: Color) {
 		for(i in 0..7) {
 			setButton(Button(i, isTop = true), color)
@@ -215,7 +212,6 @@ object Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of all right buttons to [color]. Thread-safe.
 	 */
-	@Suppress("unused")
 	@JvmStatic fun setAllRightButtons(color: Color) {
 		for(i in 0..7) {
 			setButton(Button(i, isTop = false), color)
@@ -227,7 +223,6 @@ object Rocket : LaunchpadListener {
 	 *
 	 * If the MIDI Launchpad was disconnected, pad color information is retained.
 	 */
-	@Suppress("unused")
 	@Synchronized @JvmStatic fun getPadColor(pad: Pad) =
 			padRows[pad.y][pad.x]
 
@@ -236,7 +231,6 @@ object Rocket : LaunchpadListener {
 	 *
 	 * If the MIDI Launchpad was disconnected, button color information is retained.
 	 */
-	@Suppress("unused")
 	@Synchronized @JvmStatic fun getButtonColor(button: Button): Color {
 		return if(button.isTop)
 			topButtons[button.coord]
