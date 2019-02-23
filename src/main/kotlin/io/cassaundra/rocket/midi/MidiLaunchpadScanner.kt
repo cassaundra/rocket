@@ -17,7 +17,7 @@ class MidiLaunchpadScanner(val scanRateMillis: Long) : LaunchpadScanner {
 	private var job: Job? = null
 
 	override fun beginScan(onSuccess: Runnable) {
-		if(job!!.isActive)
+		if(job != null && job?.isActive!!)
 			throw IllegalStateException("beginScan was called while already scanning")
 
 		job = GlobalScope.launch(dispatcher) {
