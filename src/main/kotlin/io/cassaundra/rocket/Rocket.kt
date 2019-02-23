@@ -1,7 +1,8 @@
 package io.cassaundra.rocket
 
 import io.cassaundra.rocket.midi.MidiDeviceConfiguration
-import io.cassaundra.rocket.midi.MidiLaunchpad
+import io.cassaundra.rocket.midi.MidiLaunchpadClient
+import io.cassaundra.rocket.midi.MidiLaunchpadScanner
 import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 import java.util.concurrent.Executors
@@ -21,7 +22,16 @@ object Rocket : LaunchpadListener {
 	private var topButtons = Array(8) { Color.OFF }
 	private var rightButtons = Array(8) { Color.OFF }
 
-	private var client: LaunchpadClient? = null
+	var scanner: LaunchpadScanner? = null
+		set(value) {
+			field?.stopScan()
+			field = value
+		}
+
+	var client: LaunchpadClient? = null
+		set(value) {
+			setLaunchpadClient(value)
+		}
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
@@ -36,24 +46,33 @@ object Rocket : LaunchpadListener {
 		rightButtons.fill(Color.OFF)
 	}
 
+	@Deprecated("Will be removed in a future update", ReplaceWith("beginMidiScan(scanRateMillis, onSuccess)", "io.cassaundra.rocket.Rocket.beginMidiScan"))
+	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long, onSuccess: Runnable = Runnable {})
+			= beginMidiScan(TimeUnit.SECONDS.toMillis(scanRateSeconds), onSuccess)
+
 	/**
-	 * Starts scanning for the MIDI device. Will rescan every [scanRateSeconds] seconds (default is 1).
+	 * Begins scanning using a [MidiLaunchpadScanner] with a scan rate (in millis) of [scanRateMillis]
+	 *
+	 * @param[onSuccess] Runnable to be called when successfully found a [MidiLaunchpadClient]
 	 */
-	@JvmOverloads @JvmStatic fun beginScan(scanRateSeconds: Long = 1, onSuccess: Runnable = Runnable {}) {
-		if(scanningJob != null && scanningJob!!.isActive)
-			return
+	@JvmOverloads @JvmStatic fun beginMidiScan(scanRateMillis: Long = 1000, onSuccess: Runnable = Runnable {}) {
+		scanner = MidiLaunchpadScanner(scanRateMillis)
 
-		val millis = TimeUnit.SECONDS.toMillis(scanRateSeconds)
+		beginScan(onSuccess)
+	}
 
-		val threadPool = Executors.newSingleThreadExecutor()
-		val dispatcher = threadPool.asCoroutineDispatcher()
+	/**
+	 * Begins scanning using the configured [scanner], if available.
+	 *
+	 * @param[onSuccess] Runnable to be called when successfully found a [LaunchpadClient]
+	 *
+	 * @throws[IllegalStateException] if called when [scanner] is null
+	 */
+	@JvmOverloads @JvmStatic fun beginScan(onSuccess: Runnable = Runnable {  }) {
+		if(scanner == null)
+			throw IllegalStateException("No scanner has been set")
 
-		GlobalScope.launch(dispatcher) {
-			while(isActive) {
-				scan(onSuccess)
-				delay(millis)
-			}
-		}
+		scanner?.beginScan(onSuccess)
 	}
 
 	/**
@@ -63,32 +82,16 @@ object Rocket : LaunchpadListener {
 		scanningJob?.cancel()
 	}
 
-	private fun scan(onSuccess: Runnable) {
-		val config = MidiDeviceConfiguration.autodetect()
-
-		if(config.inputDevice == null || config.outputDevice == null) {
-			setLaunchpadClient(null)
-		} else if(client == null || client !is LaunchpadClient) {
-			try {
-				setLaunchpadClient(MidiLaunchpad(config))
-				onSuccess.run()
-			} catch(exc: MidiUnavailableException) {
-				logger.error("Could not setup MIDI launchpad", exc)
-			}
-		}
-	}
-
 	/**
 	 * Whether or not a MIDI Launchpad is connected.
 	 */
 	@JvmStatic fun midiClientIsAvailable(): Boolean {
 		if(isClosed) return false
 
-		scan(Runnable {})
 		return client != null
 	}
 
-	@JvmStatic fun setLaunchpadClient(client: LaunchpadClient?) {
+	private fun setLaunchpadClient(client: LaunchpadClient?) {
 		this.client = client
 
 		if(client == null)
