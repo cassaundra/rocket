@@ -20,7 +20,7 @@ Add this to your pom.xml:
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.1.2</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -28,7 +28,7 @@ Alternatively, with Gradle:
 
 ```
 dependencies {
-  compile 'io.cassaundra:rocket:1.1.2'
+  compile 'io.cassaundra:rocket:1.2.0'
 }
 ```
 
@@ -41,7 +41,7 @@ import io.cassaundra.rocket.Rocket.setPad
 // ...
 
 // Allow MIDI scanning to begin
-Rocket.beginScan()
+Rocket.beginMidiScan()
 
 // Listen for input events
 Rocket.addListener(object : LaunchpadListener {
@@ -75,7 +75,7 @@ import static io.cassaundra.rocket.Rocket.setPad;
 // ...
 
 // Allow MIDI scanning to begin
-Rocket.beginScan();
+Rocket.beginMidiScan();
 
 // Listen for input events
 Rocket.addListener(new LaunchpadListener() {
