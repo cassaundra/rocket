@@ -1,4 +1,5 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.3.11-blue.svg)](http://kotlinlang.org)
+[![Maven Central](https://img.shields.io/maven-central/v/io.cassaundra/rocket.svg)](https://search.maven.org/artifact/io.cassaundra/rocket)
+[![Javadocs](https://www.javadoc.io/badge/io.cassaundra/rocket.svg)](https://www.javadoc.io/doc/io.cassaundra/rocket)
 
 <img src="Logo.png" width=192 height=192>
 
@@ -187,4 +188,4 @@ Rocket.displayText(
 ## TODO
 * Add contributing documentation
 * Add support for multiple Launchpads (I have only one)
-* Restructure
+* Use Gradle?
