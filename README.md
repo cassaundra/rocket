@@ -27,7 +27,7 @@ Add this to your pom.xml:
 
 Alternatively, with Gradle:
 
-```
+```gradle
 dependencies {
   compile 'io.cassaundra:rocket:1.2.0'
 }
