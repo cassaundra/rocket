@@ -188,4 +188,5 @@ Rocket.displayText(
 ## TODO
 * Add contributing documentation
 * Add support for multiple Launchpads (I have only one)
-* Use Gradle?
+* Use Gradle instead of Maven
+* Add more unit tests!
