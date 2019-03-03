@@ -5,7 +5,7 @@ sudo: false
 
 install: true
 
-script: mvn clean install
+script: mvn clean test
 
 cache:
   directories:
