@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/cassaundra/rocket.svg?branch=master)](https://travis-ci.com/cassaundra/rocket)
 [![Maven Central](https://img.shields.io/maven-central/v/io.cassaundra/rocket.svg)](https://search.maven.org/artifact/io.cassaundra/rocket)
 [![Javadocs](https://www.javadoc.io/badge/io.cassaundra/rocket.svg)](https://www.javadoc.io/doc/io.cassaundra/rocket)
 
