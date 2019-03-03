@@ -3,12 +3,13 @@ package io.cassaundra.rocket
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import kotlin.test.assertFailsWith
 
 class RocketTest {
 	private val launchpadClientMock = mock(LaunchpadClient::class.java)
 
 	@Test
-	fun `set pads`() {
+	fun `setting pads should call client`() {
 		// given
 		val pads = setOf(Pad(3, 7), Pad(2, 4))
 
@@ -24,12 +25,12 @@ class RocketTest {
 	}
 
 	@Test(expected = IllegalArgumentException::class)
-	fun `set invalid pad`() {
+	fun `creating an invalid pad should throw exception`() {
 		Pad(8, -1)
 	}
 
 	@Test
-	fun `set buttons`() {
+	fun `setting buttons should call client`() {
 		// given
 		val buttons = setOf(Button(3, true), Button(2, false))
 
@@ -44,8 +45,13 @@ class RocketTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException::class)
-	fun `set invalid button`() {
-		Button(8, true)
+	@Test
+	fun `creating an invalid button should throw exception`() {
+		assertFailsWith<IllegalArgumentException> {
+			Button(8, true)
+		}
+		assertFailsWith<java.lang.IllegalArgumentException> {
+			Button(-1, false)
+		}
 	}
 }
