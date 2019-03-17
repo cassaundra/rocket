@@ -71,8 +71,7 @@ class Rocket : LaunchpadListener {
 	 * Stops scanning for the MIDI device.
 	 */
 	fun stopScan() {
-		if(scanner != null)
-			scanner?.stopScan()
+		scanner?.stopScan()
 	}
 
 	/**
