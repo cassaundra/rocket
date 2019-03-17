@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import java.util.concurrent.Executors
 import javax.sound.midi.MidiUnavailableException
 
-class MidiLaunchpadScanner(val scanRateMillis: Long) : LaunchpadScanner {
+class MidiLaunchpadScanner(private val rocket: Rocket, private val scanRateMillis: Long) : LaunchpadScanner {
 	private val logger = LoggerFactory.getLogger(MidiLaunchpadScanner::class.java)
 
 	private val threadPool = Executors.newSingleThreadExecutor()
@@ -36,11 +36,11 @@ class MidiLaunchpadScanner(val scanRateMillis: Long) : LaunchpadScanner {
 		val config = MidiDeviceConfiguration.autodetect()
 
 		if(config.inputDevice == null || config.outputDevice == null) {
-			Rocket.client = null
+			rocket.client = null
 
-		} else if(Rocket.client == null || Rocket.client !is LaunchpadClient) {
+		} else if(rocket.client == null || rocket.client !is LaunchpadClient) {
 			try {
-				Rocket.client = MidiLaunchpadClient(config)
+				rocket.client = MidiLaunchpadClient(config)
 				onSuccess.run()
 			} catch(exc: MidiUnavailableException) {
 				logger.error("Could not setup MIDI launchpad", exc)

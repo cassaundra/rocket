@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 import javax.sound.midi.*
 
+/**
+ * Default client for the Launchpad
+ */
 class MidiLaunchpadClient(private val configuration: MidiDeviceConfiguration?) : LaunchpadClient {
 	private val logger = LoggerFactory.getLogger(MidiLaunchpadClient::class.java)
 
@@ -127,7 +130,7 @@ class MidiLaunchpadClient(private val configuration: MidiDeviceConfiguration?) :
 
 	// listening
 
-	inner class MidiLaunchpadReceiver(var launchpadListener: LaunchpadListener) : Receiver {
+	inner class MidiLaunchpadReceiver(private var launchpadListener: LaunchpadListener) : Receiver {
 		override fun send(message: MidiMessage, timestamp: Long) = when(message) {
 			is ShortMessage ->
 				handleShortMessage(message)
