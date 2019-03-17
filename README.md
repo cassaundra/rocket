@@ -22,7 +22,7 @@ Add this to your pom.xml:
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.2.3</version>
+  <version>1.3.0</version>
 </dependency>
 ```
 
@@ -30,76 +30,71 @@ Alternatively, with Gradle:
 
 ```gradle
 dependencies {
-  compile 'io.cassaundra:rocket:1.2.3'
+  compile 'io.cassaundra:rocket:1.3.0'
 }
 ```
 
 ## Getting Started
 
-Rocket is designed to be more than a MIDI interface. When a device is disconnected, the exact same state is sent upon reconnection so that you don't have to worry about
-
 ```kotlin
-import io.cassaundra.rocket.Rocket.setButton
-import io.cassaundra.rocket.Rocket.setPad
+val rocket = Rocket()
 
-// ...
+with(rocket) {
+	// Allow MIDI scanning to begin
+	beginMidiScan()
+	
+	// Listen for input events
+	addListener(object : LaunchpadListener {
+		override fun onPadDown(pad: Pad) {
+			setPad(pad, Color.WHITE)
+		}
+	
+		override fun onPadUp(pad: Pad) {
+			setPad(pad, Color.OFF)
+		}
+	
+		override fun onButtonDown(button: Button) {
+			if(button.isTop)
+				setButton(button, Color.RED)
+			else
+				setButton(button, Color.BLUE)
+		}
+	
+		override fun onButtonUp(button: Button) {
+			setButton(button, Color.OFF)
+		}
+	})
+}
 
-// Allow MIDI scanning to begin
-Rocket.beginMidiScan()
-
-// Listen for input events
-Rocket.addListener(object : LaunchpadListener {
-    override fun onPadDown(pad: Pad) {
-        setPad(pad, Color.WHITE)
-    }
-
-    override fun onPadUp(pad: Pad) {
-        setPad(pad, Color.OFF)
-    }
-
-    override fun onButtonDown(button: Button) {
-        if(button.isTop)
-            setButton(button, Color.RED)
-        else
-            setButton(button, Color.BLUE)
-    }
-
-    override fun onButtonUp(button: Button) {
-        setButton(button, Color.OFF)
-    }
-})
 ```
 
 Similarly, in Java...
 
 ```java
-import static io.cassaundra.rocket.Rocket.setButton;
-import static io.cassaundra.rocket.Rocket.setPad;
-
-// ...
+Rocket rocket = new Rocket();
 
 // Allow MIDI scanning to begin
-Rocket.beginMidiScan();
+rocket.beginMidiScan();
 
 // Listen for input events
-Rocket.addListener(new LaunchpadListener() {
-    public void onPadDown(@NotNull Pad pad) {
-        setPad(pad, Color.WHITE);
+rocket.addListener(new LaunchpadListener() {
+    public void onPadDown(Pad pad) {
+        rocket.setPad(pad, Color.WHITE);
     }
 
     public void onPadUp(@NotNull Pad pad) {
-        setPad(pad, Color.OFF);
+        rocket.setPad(pad, Color.OFF);
     }
 
     public void onButtonDown(@NotNull Button button) {
         if(button.isTop())
-            setButton(button, Color.RED);
+            rocket.setButton(button, Color.RED);
         else
-            setButton(button, Color.BLUE);
+            rocket.setButton(button, Color.BLUE);
     }
 
     public void onButtonUp(@NotNull Button button) {
-        setButton(button, Color.OFF);
+        rocket.setButton(button, Color.OFF);
     }
 });
 ```
@@ -133,7 +128,7 @@ Color.fromHSV(.5f, 1f, 1f)
 You can call the Launchpad's built-in MIDI command for displaying text with `Launchpad.displayText`.
 
 ```kotlin
-Rocket.displayText(
+rocket.displayText(
     "Hello world!"
 )
 ```
@@ -141,7 +136,7 @@ Rocket.displayText(
 In Java,
 
 ```java
-Rocket.displayText(
+rocket.displayText(
     "Hello world!"
 );
 ```
@@ -151,7 +146,7 @@ Rocket.displayText(
 You can control the text scrolling speed per-character with seven different available speeds in `TextSpeed`.
 
 ```kotlin
-Rocket.displayText(
+rocket.displayText(
     "Hello! ${TextSpeed.SPEED_1}Let's take this slower."
 )
 ```
@@ -159,7 +154,7 @@ Rocket.displayText(
 In Java,
 
 ```java
-Rocket.displayText(
+rocket.displayText(
     "Hello! " + TextSpeed.SPEED_1 + "Let's take this slower."
 );
 ```
@@ -169,7 +164,7 @@ Rocket.displayText(
 If you need to know when text has finished scrolling, you can use the onComplete argument.
 
 ```kotlin
-Rocket.displayText(
+rocket.displayText(
     "Hello world!",
     onComplete = Runnable { println("Done!") }
 )
@@ -179,7 +174,7 @@ Rocket.displayText(
 In Java,
 
 ```java
-Rocket.displayText(
+rocket.displayText(
     "Hello world!"
 );
 ```
