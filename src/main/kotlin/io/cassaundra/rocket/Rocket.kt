@@ -2,10 +2,8 @@ package io.cassaundra.rocket
 
 import io.cassaundra.rocket.midi.MidiLaunchpadClient
 import io.cassaundra.rocket.midi.MidiLaunchpadScanner
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
 import org.slf4j.LoggerFactory
-import java.util.concurrent.TimeUnit
 
 /**
  * Manages Launchpads and MIDI scanning.
@@ -20,7 +18,7 @@ class Rocket : LaunchpadListener {
 	private var topButtons = Array(8) { Color.OFF }
 	private var rightButtons = Array(8) { Color.OFF }
 
-	var scanner: LaunchpadScanner? = null
+	private var scanner: LaunchpadScanner? = null
 		set(value) {
 			field?.stopScan()
 			field = value
@@ -34,7 +32,6 @@ class Rocket : LaunchpadListener {
 
 	private val logger = LoggerFactory.getLogger(Rocket::class.java)
 
-	private var scanningJob: Job? = null
 	private var isClosed = false
 
 	init {
@@ -45,10 +42,6 @@ class Rocket : LaunchpadListener {
 		rightButtons.fill(Color.OFF)
 	}
 
-	@Deprecated("Will be removed in a future update", ReplaceWith("beginMidiScan(scanRateMillis, onSuccess)", "io.cassaundra.rocket.Rocket.beginMidiScan"))
-	@JvmOverloads fun beginScan(scanRateSeconds: Long, onSuccess: Runnable = Runnable {})
-			= beginMidiScan(TimeUnit.SECONDS.toMillis(scanRateSeconds), onSuccess)
-
 	/**
 	 * Begins scanning using a [MidiLaunchpadScanner] with a scan rate (in millis) of [scanRateMillis]
 	 *
@@ -56,10 +49,9 @@ class Rocket : LaunchpadListener {
 	 *
 	 * @param[onSuccess] Runnable to be called when successfully found a [MidiLaunchpadClient]
 	 */
-	@JvmOverloads fun beginMidiScan(scanRateMillis: Long = 1000, onSuccess: Runnable = Runnable {}) {
-		scanner = MidiLaunchpadScanner(this, scanRateMillis)
-
-		beginScan(onSuccess)
+	@JvmOverloads
+	fun beginMidiScan(scanRateMillis: Long = 1000, onSuccess: Runnable = Runnable {}) {
+		beginScan(MidiLaunchpadScanner(this, scanRateMillis), onSuccess)
 	}
 
 	/**
@@ -69,25 +61,25 @@ class Rocket : LaunchpadListener {
 	 *
 	 * @throws[IllegalStateException] if called when [scanner] is null
 	 */
-	@JvmOverloads fun beginScan(onSuccess: Runnable = Runnable {  }) {
-		if(scanner == null)
-			throw IllegalStateException("No scanner has been set")
-
-		scanner?.beginScan(onSuccess)
+	@JvmOverloads
+	fun beginScan(scanner: MidiLaunchpadScanner, onSuccess: Runnable = Runnable { }) {
+		this.scanner = scanner
+		scanner.beginScan(onSuccess)
 	}
 
 	/**
 	 * Stops scanning for the MIDI device.
 	 */
 	fun stopScan() {
-		scanningJob?.cancel()
+		if(scanner != null)
+			scanner?.stopScan()
 	}
 
 	/**
 	 * Whether or not a MIDI Launchpad is connected.
 	 */
 	fun midiClientIsAvailable(): Boolean {
-		if(isClosed) return false
+		if (isClosed) return false
 
 		scanner?.quickScan(Runnable {})
 
@@ -95,20 +87,20 @@ class Rocket : LaunchpadListener {
 	}
 
 	private fun setLaunchpadClient(client: LaunchpadClient?) {
-		if(client == null)
+		if (client == null)
 			return
 
 		client.setListener(this)
 
 		client.clear()
 
-		for(i in 0..7) {
+		for (i in 0..7) {
 			client.sendButtonColor(Button(i, isTop = true), topButtons[i])
 			client.sendButtonColor(Button(i, isTop = false), rightButtons[i])
 		}
 
-		for(y in 0..7) {
-			for(x in 0..7) {
+		for (y in 0..7) {
+			for (x in 0..7) {
 				client.sendPadColor(Pad(x, y), padRows[y][x])
 			}
 		}
@@ -124,7 +116,7 @@ class Rocket : LaunchpadListener {
 	 * Closes MIDI device if open and stops scanning
 	 */
 	fun close() {
-		if(midiClientIsAvailable()) {
+		if (midiClientIsAvailable()) {
 			client?.clear()
 			client?.close()
 		}
@@ -135,7 +127,8 @@ class Rocket : LaunchpadListener {
 	/**
 	 * Sets all pads and buttons to [Color.OFF]. Thread-safe.
 	 */
-	@Synchronized fun clearAll() {
+	@Synchronized
+	fun clearAll() {
 		padRows.forEach { it.fill(Color.OFF) }
 		topButtons.fill(Color.OFF)
 		rightButtons.fill(Color.OFF)
@@ -146,10 +139,11 @@ class Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [pad] to [color]. Thread-safe.
 	 */
-	@Synchronized fun setPad(pad: Pad, color: Color) {
+	@Synchronized
+	fun setPad(pad: Pad, color: Color) {
 		val oldColor = padRows[pad.y][pad.x]
 
-		if(oldColor === color) return
+		if (oldColor === color) return
 
 		padRows[pad.y][pad.x] = color
 
@@ -159,7 +153,8 @@ class Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [pads] to [color]. Thread-safe.
 	 */
-	@Synchronized fun setPads(pads: Set<Pad>, color: Color) {
+	@Synchronized
+	fun setPads(pads: Set<Pad>, color: Color) {
 		pads.forEach {
 			setPad(it, color)
 		}
@@ -179,10 +174,11 @@ class Rocket : LaunchpadListener {
 	/**
 	 * Sets a specific button's color to [color]. Thread-safe.
 	 */
-	@Synchronized fun setButton(button: Button, color: Color) {
+	@Synchronized
+	fun setButton(button: Button, color: Color) {
 		val oldColor: Color
 
-		if(button.isTop) {
+		if (button.isTop) {
 			oldColor = topButtons[button.coord]
 			topButtons[button.coord] = color
 		} else {
@@ -190,7 +186,7 @@ class Rocket : LaunchpadListener {
 			rightButtons[button.coord] = color
 		}
 
-		if(oldColor == color) return
+		if (oldColor == color) return
 
 		client?.sendButtonColor(button, color)
 	}
@@ -198,7 +194,8 @@ class Rocket : LaunchpadListener {
 	/**
 	 * Sets the color of [buttons] to [color]. Thread-safe.
 	 */
-	@Synchronized fun setButtons(buttons: Set<Button>, color: Color) {
+	@Synchronized
+	fun setButtons(buttons: Set<Button>, color: Color) {
 		buttons.forEach {
 			setButton(it, color)
 		}
@@ -208,7 +205,7 @@ class Rocket : LaunchpadListener {
 	 * Sets the color of all top buttons to [color]. Thread-safe.
 	 */
 	fun setAllTopButtons(color: Color) {
-		for(i in 0..7) {
+		for (i in 0..7) {
 			setButton(Button(i, isTop = true), color)
 		}
 	}
@@ -217,7 +214,7 @@ class Rocket : LaunchpadListener {
 	 * Sets the color of all right buttons to [color]. Thread-safe.
 	 */
 	fun setAllRightButtons(color: Color) {
-		for(i in 0..7) {
+		for (i in 0..7) {
 			setButton(Button(i, isTop = false), color)
 		}
 	}
@@ -227,7 +224,8 @@ class Rocket : LaunchpadListener {
 	 *
 	 * If the MIDI Launchpad was disconnected, pad color information is retained.
 	 */
-	@Synchronized fun getPadColor(pad: Pad) =
+	@Synchronized
+	fun getPadColor(pad: Pad) =
 			padRows[pad.y][pad.x]
 
 	/**
@@ -235,8 +233,9 @@ class Rocket : LaunchpadListener {
 	 *
 	 * If the MIDI Launchpad was disconnected, button color information is retained.
 	 */
-	@Synchronized fun getButtonColor(button: Button): Color {
-		return if(button.isTop)
+	@Synchronized
+	fun getButtonColor(button: Button): Color {
+		return if (button.isTop)
 			topButtons[button.coord]
 		else
 			rightButtons[button.coord]
@@ -247,35 +246,27 @@ class Rocket : LaunchpadListener {
 	 *
 	 * See colors: https://customer.novationmusic.com/sites/customer/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide-v1-02.pdf
 	 *
-	 * @param[color] The MIDI velocity to send
-	 */
-	@Deprecated("Use io.cassaundra.rocket.Color for color instead")
-	@Synchronized @JvmOverloads fun displayText(text: String, color: Int, onComplete: Runnable = Runnable {}) {
-		client?.displayText(text, color, onComplete)
-	}
-
-	/**
-	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run. Thread-safe.
-	 *
-	 * See colors: https://customer.novationmusic.com/sites/customer/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide-v1-02.pdf
-	 *
 	 * @param[color] The color to use
 	 */
-	@Synchronized @JvmOverloads fun displayText(text: String, color: Color = Color.WHITE, onComplete: Runnable = Runnable {}) {
+	@Synchronized
+	@JvmOverloads
+	fun displayText(text: String, color: Color = Color.WHITE, onComplete: Runnable = Runnable {}) {
 		client?.displayText(text, color, onComplete)
 	}
 
 	/**
 	 * Adds [listener] to the list of listeners. Thread-safe.
 	 */
-	@Synchronized fun addListener(listener: LaunchpadListener) {
+	@Synchronized
+	fun addListener(listener: LaunchpadListener) {
 		listeners.add(listener)
 	}
 
 	/**
 	 * Removes [listener] from the list of listeners. Thread-safe.
 	 */
-	@Synchronized fun removeListener(listener: LaunchpadListener) {
+	@Synchronized
+	fun removeListener(listener: LaunchpadListener) {
 		listeners.remove(listener)
 	}
 
