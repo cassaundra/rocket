@@ -22,7 +22,7 @@ Add this to your pom.xml:
 <dependency>
   <groupId>io.cassaundra</groupId>
   <artifactId>rocket</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
 </dependency>
 ```
 
@@ -30,11 +30,13 @@ Alternatively, with Gradle:
 
 ```gradle
 dependencies {
-  compile 'io.cassaundra:rocket:1.2.2'
+  compile 'io.cassaundra:rocket:1.2.3'
 }
 ```
 
 ## Getting Started
+
+Rocket is designed to be more than a MIDI interface. When a device is disconnected, the exact same state is sent upon reconnection so that you don't have to worry about
 
 ```kotlin
 import io.cassaundra.rocket.Rocket.setButton
@@ -106,7 +108,7 @@ Now you're on your way to creating a full Launchpad app!
 
 ## Colors
 
-You can use custom colors by specifiying RGB int values between 0 and 63 inclusive.
+You can use custom colors by specifying RGB int values between 0 and 63 inclusive.
 
 ```kotlin
 val color = Color(42, 0, 30)
@@ -128,7 +130,7 @@ Color.fromHSV(.5f, 1f, 1f)
 
 ### Basics
 
-You can call the Launchpad's built-in MIDI command for displaying text with `Launchpad.displayText`. Due to a Launchpad MIDI issue, changing the color from white does not yet work.
+You can call the Launchpad's built-in MIDI command for displaying text with `Launchpad.displayText`.
 
 ```kotlin
 Rocket.displayText(

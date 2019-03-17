@@ -5,18 +5,19 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import kotlin.test.assertFailsWith
 
-class RocketTest {
+class LaunchpadTestKotlin {
 	private val launchpadClientMock = mock(LaunchpadClient::class.java)
+	private val rocket = Rocket()
 
 	@Test
 	fun `setting pads should call client`() {
 		// given
 		val pads = setOf(Pad(3, 7), Pad(2, 4))
 
-		Rocket.client = launchpadClientMock
+		rocket.client = launchpadClientMock
 
 		// when
-		Rocket.setPads(pads, Color.WHITE)
+		rocket.setPads(pads, Color.WHITE)
 
 		// then
 		pads.forEach {
@@ -34,10 +35,10 @@ class RocketTest {
 		// given
 		val buttons = setOf(Button(3, true), Button(2, false))
 
-		Rocket.client = launchpadClientMock
+		rocket.client = launchpadClientMock
 
 		// when
-		Rocket.setButtons(buttons, Color.WHITE)
+		rocket.setButtons(buttons, Color.WHITE)
 
 		// then
 		buttons.forEach {
@@ -50,7 +51,7 @@ class RocketTest {
 		assertFailsWith<IllegalArgumentException> {
 			Button(8, true)
 		}
-		assertFailsWith<java.lang.IllegalArgumentException> {
+		assertFailsWith<IllegalArgumentException> {
 			Button(-1, false)
 		}
 	}
