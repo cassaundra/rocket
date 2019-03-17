@@ -249,7 +249,19 @@ object Rocket : LaunchpadListener {
 	 *
 	 * @param[color] The MIDI velocity to send
 	 */
+	@Deprecated("Use io.cassaundra.rocket.Color for color instead")
 	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Int = 3, onComplete: Runnable = Runnable {}) {
+		client?.displayText(text, color, onComplete)
+	}
+
+	/**
+	 * Display [text] in color [color] on the Launchpad. When the text has finished displaying, [onComplete] is run. Thread-safe.
+	 *
+	 * See colors: https://customer.novationmusic.com/sites/customer/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide-v1-02.pdf
+	 *
+	 * @param[color] The color to use
+	 */
+	@Synchronized @JvmOverloads @JvmStatic fun displayText(text: String, color: Color, onComplete: Runnable = Runnable {}) {
 		client?.displayText(text, color, onComplete)
 	}
 
