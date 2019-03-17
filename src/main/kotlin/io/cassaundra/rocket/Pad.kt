@@ -16,11 +16,11 @@ class Pad(x: Int, y: Int) {
 	val x: Int = if(x in 0..7) x else throw IllegalArgumentException("x not in 0..7")
 	val y: Int = if(y in 0..7) y else throw IllegalArgumentException("y not in 0..7")
 
+	@Suppress("unused")
 	companion object Util {
 		/**
 		 * Gets a rectangle of pads with corner points [p1] and [p2].
 		 */
-		@Suppress("unused")
 		@JvmStatic fun rect(p1: Pad, p2: Pad): Set<Pad> {
 			val x1: Int = Math.min(p1.x, p2.x)
 			val x2: Int = Math.max(p1.x, p2.x)
@@ -39,7 +39,6 @@ class Pad(x: Int, y: Int) {
 		/**
 		 * Gets the outline pads of a rectangle with corner points [p1] and [p2].
 		 */
-		@Suppress("unused")
 		@JvmStatic fun rectOutline(p1: Pad, p2: Pad): Set<Pad> {
 			val pads: MutableSet<Pad> = mutableSetOf()
 
@@ -67,7 +66,6 @@ class Pad(x: Int, y: Int) {
 		/**
 		 * Gets a thin line segment from [p1] to [p2].
 		 */
-		@Suppress("unused")
 		@JvmStatic fun line(p1: Pad, p2: Pad): Set<Pad> {
 			val xDiff = p2.x - p1.x
 			val yDiff = p2.y - p1.y
@@ -91,14 +89,12 @@ class Pad(x: Int, y: Int) {
 		/**
 		 * Gets all pads in row [index].
 		 */
-		@Suppress("unused")
 		@JvmStatic fun row(index: Int) =
 				all.filter { it.y == index }.toSet()
 
 		/**
 		 * Gets all pads in column [index].
 		 */
-		@Suppress("unused")
 		@JvmStatic fun column(index: Int) =
 				all.filter { it.x == index }.toSet()
 

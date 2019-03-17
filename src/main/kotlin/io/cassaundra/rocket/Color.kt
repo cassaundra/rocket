@@ -4,7 +4,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * A color to be used on the Launchpad. Each RGB value should be between 0 and 63 inclusive.
+ * A color to be used on the Launchpad. Each RGB value should be between 0 and 255 inclusive.
  */
 data class Color(val red: Int, val green: Int, val blue: Int) {
 	/**
@@ -15,12 +15,12 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 	@Suppress("unused")
 	companion object Util {
 		@JvmField val OFF = Color(0)
-		@JvmField val GRAY = Color(31)
-		@JvmField val WHITE = Color(63)
+		@JvmField val GRAY = Color(127)
+		@JvmField val WHITE = Color(255)
 
-		@JvmField val RED = Color(63, 0, 0)
-		@JvmField val GREEN = Color(0, 63, 0)
-		@JvmField val BLUE = Color(0, 0, 63)
+		@JvmField val RED = Color(255, 0, 0)
+		@JvmField val GREEN = Color(0, 255, 0)
+		@JvmField val BLUE = Color(0, 0, 255)
 
 		/**
 		 * Converts an HSV color ([hue], [saturation], [value]) to a [Color] to be used on the Launchpad.
@@ -82,7 +82,7 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
 				}
 			}
 
-			return Color((r * 63).toInt(), (g * 63).toInt(), (b * 63).toInt())
+			return Color((r * 255).toInt(), (g * 255).toInt(), (b * 255).toInt())
 		}
 	}
 }

@@ -34,7 +34,13 @@ interface LaunchpadClient {
 	/**
 	 * Display text on the Launchpad. Call [onComplete] when done.
 	 */
+	@Deprecated("Use io.cassaundra.rocket.Color for color instead")
 	fun displayText(text: String, color: Int, onComplete: Runnable)
+
+	/**
+	 * Display text on the Launchpad. Call [onComplete] when done.
+	 */
+	fun displayText(text: String, color: Color, onComplete: Runnable)
 
 	/**
 	 * Close this connection.

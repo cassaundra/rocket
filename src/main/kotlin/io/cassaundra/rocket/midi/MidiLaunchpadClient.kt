@@ -78,12 +78,22 @@ class MidiLaunchpadClient(private val configuration: MidiDeviceConfiguration?) :
 	}
 
 	private fun sendLEDChange(note: Int, color: Color) {
-		sendSysExMessage(byteArrayOf(11.toByte(), note.toByte(), color.red.toByte(), color.green.toByte(), color.blue.toByte(), 247.toByte()))
+		sendSysExMessage(byteArrayOf(11.toByte(), note.toByte(), (color.red/4).toByte(), (color.green/4).toByte(), (color.blue/4).toByte(), 247.toByte()))
 	}
 
+	// will be removed
 	override fun displayText(text: String, color: Int, onComplete: Runnable) {
 		onTextComplete = onComplete
 		var bytes = byteArrayOf(20.toByte(), color.toByte(), 0.toByte())
+		bytes += text.toByteArray(StandardCharsets.US_ASCII)
+		bytes += 247.toByte()
+
+		sendSysExMessage(bytes)
+	}
+
+	override fun displayText(text: String, color: Color, onComplete: Runnable) {
+		onTextComplete = onComplete
+		var bytes = byteArrayOf(20.toByte(), nearestMidiColor(color), 0.toByte())
 		bytes += text.toByteArray(StandardCharsets.US_ASCII)
 		bytes += 247.toByte()
 
